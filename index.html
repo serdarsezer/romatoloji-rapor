@@ -189,7 +189,7 @@ footer.src p.sorumluluk{color:var(--ink)}
 
 <footer class="src">
   <p class="sorumluluk"><b>Önemli:</b> SUT metinleri, SGK'nın yayımladığı 02.10.2026 tarihli işlenmiş güncel Sağlık Uygulama Tebliği metnine göredir (30.10.2026'da karşılaştırılmıştır). Bu tarihten sonraki SUT değişikliklerini kontrol edin; güncel SUT esas alınmalıdır. Üretilen metnin doğruluğu ve SUT'a uygunluğu raporu düzenleyen hekimin sorumluluğundadır.</p>
-  <p>Endikasyon dışı kullanım satırları TİTCK'nın 15.12.2022 tarihli "Ek Onayı Alınmadan Kullanılabilecek Endikasyon Dışı İlaç Listesi"nden aynen aktarılmıştır. Rapor teşhis kodları etanersept, upadasitinib, anakinra, bosentan, nintedanib ve denosumab ilaç veri tabanı kayıtlarındaki teşhis kodu listelerinden doğrulanmıştır; diğerlerini ve "doğrulayın" notu olanları Medula'da kontrol edin.</p>
+  <p>Endikasyon dışı kullanım satırları TİTCK'nın 15.12.2022 tarihli "Ek Onayı Alınmadan Kullanılabilecek Endikasyon Dışı İlaç Listesi"nden aynen aktarılmıştır. Rapor teşhis kodları SGK Ek-4/D listesi ve Medula raporlarında kullanılan kodlarla karşılaştırılmıştır; "doğrulayın" veya "kontrol edin" notu olanları Medula'da kontrol edin.</p>
   <p>Araç hasta kimlik bilgisi istemez; girilen değerler yalnızca kullandığınız tarayıcıda kalır ve hiçbir yere gönderilmez.</p>
 </footer>
 </div>
@@ -462,11 +462,11 @@ const DZ = {
  ra:{ad:"Romatoid artrit", grup:"Artritler", icd:"M06.9 (seropozitif: M05.8 / M05.9)", teshis:"09.01.5.1 – Romatoid artrit",
      ilac:["ADA","ETN","GLM","SZP","INF","RTX","ABA_IV","ABA_SC","TCZ_IV","TCZ_SC","TOFA","TOFA_XR","BARI","UPA"]},
  as:{ad:"Aksiyel tutulumlu ankilozan spondilit", grup:"Spondiloartritler", icd:"M45", teshis:"09.01.6.2 – Ankilozan spondilit",
-     ilac:["ADA","ETN","GLM","SZP","INF","SEC","TOFA_XR","UPA"]},
+     ilac:["ADA","ETN","GLM","SZP","INF","SEC","TOFA","TOFA_XR","UPA"]},
  nr:{ad:"Radyografik olmayan aksiyel spondiloartrit (nr-axSpA)", grup:"Spondiloartritler", icd:"M46.8", teshis:"09.01.6.2 – Ankilozan spondilit",
      ilac:["ADA","ETN","GLM","SZP","INF","UPA"]},
  per:{ad:"Periferik eklem tutulumlu ankilozan spondilit", grup:"Spondiloartritler", icd:"M45", teshis:"09.01.6.2 – Ankilozan spondilit",
-     ilac:["ADA","ETN","GLM","SZP","INF","SEC","TOFA_XR","UPA"]},
+     ilac:["ADA","ETN","GLM","SZP","INF","SEC","TOFA","TOFA_XR","UPA"]},
  psa:{ad:"Psöriatik artrit", grup:"Artritler", icd:"L40.5 (M07.3*)", teshis:"09.01.6.4 – Psöriatik artrit",
      ilac:["ADA","ETN","GLM","SZP","INF","SEC","IXE","UST","TOFA","TOFA_XR","UPA","APR"]},
  fmf:{ad:"Ailevi Akdeniz Ateşi (amiloidozu olmayan)", grup:"Otoinflamatuvar", icd:"E85.0 (Ailevi Akdeniz Ateşi; ICD-10 2016 ve sonrası: M04.1)", teshis:"06.05 – Ailevi Akdeniz Ateşi (FMF) · 15.13 de geçerlidir; biri yeterli",
@@ -477,7 +477,7 @@ const DZ = {
      ilac:["ANA","CAN"]},
  caps:{ad:"Kriyopirin ilişkili periyodik sendromlar (CAPS)", grup:"Otoinflamatuvar", icd:"M04.2 (Medula'da doğrulayın)", teshis:"15.13 – Ailesel (herediter) otoinflamatuar hastalıklar (CAPS, NOMID hastalığı, FMF ve Muckle-Wells sendromu)",
      ilac:["ANA","CAN"]},
- aosd:{ad:"Erişkin başlangıçlı Still hastalığı", grup:"Otoinflamatuvar", icd:"M06.1", teshis:"Medula'da kontrol edin (anakinra yurt dışı ilaç listesinde; programda teşhis kodu tanımı yok)",
+ aosd:{ad:"Erişkin başlangıçlı Still hastalığı", grup:"Otoinflamatuvar", icd:"M06.1", teshis:"Medula'da kontrol edin (M06.1, Ek-4/D 9.1.5 kapsamındadır; anakinra Ek-4/D 9.2.16 ve Ek-4/C listesindedir)",
      ilac:["ANA"]},
  dha:{ad:"Dev hücreli arterit", grup:"Vaskülitler", icd:"M31.6 (polimiyalji romatika ile: M31.5)", teshis:"20.00 – Ek-4/D listesinde yer almayan hastalıklar (doğrulayın)",
      ilac:["TCZ_SC","UPA"]},
@@ -491,7 +491,7 @@ const DZ = {
      ilac:["FEB","KOL"]},
  lef:{ad:"Leflunomid arındırma (kolestiramin)", grup:"Diğer", icd:"Altta yatan tanıya göre (örn. M06.9)", teshis:"Rapor gerekmez (reçete açıklaması)",
      ilac:["KST"]},
- op:{ad:"Osteoporoz (sekonder / glukokortikoid ilişkili)", grup:"Diğer", icd:"M81.4 (ilaca bağlı) · M81.8 · kırıklı: M80.x", teshis:"20.09 – Osteoporoz + 12.7.17.1.4'te belirtilen hastalıklar · 20.02 – Osteoporoz",
+ op:{ad:"Osteoporoz (sekonder / glukokortikoid ilişkili)", grup:"Diğer", icd:"M81.4 (ilaca bağlı) · M81.8 · kırıklı: M80.x", teshis:"20.02 – Osteoporoz (Medula'da kontrol edin)",
      ilac:["DEN"]},
  edi:{ad:"Endikasyon dışı kullanım (TİTCK ek onaysız listesi)", grup:"Endikasyon dışı", icd:"Tanıya göre", teshis:"Tanıya göre", ilac:[]},
  edo:{ad:"Endikasyon dışı kullanım (Sağlık Bakanlığı onaylı)", grup:"Endikasyon dışı", icd:"Tanıya göre", teshis:"21.01 / 20.01", ilac:[]}
@@ -590,7 +590,7 @@ function doseText(dz, dr, st) {
     case "BARI": return V("f_bari") === "2" ? "oral olarak günde 1 kez 2 mg dozunda" : "oral olarak günde 1 kez 4 mg dozunda";
     case "UPA": return "oral olarak günde 1 kez 15 mg dozunda";
     case "SEC": {
-      const d = dz === "psa" ? (V("f_sec_psa") === "150" ? 150 : 300) : (V("f_sec_as") === "300" ? 300 : 150);
+      const d = dz === "psa" ? (V("f_sec_psa") === "150" ? 150 : 300) : (st === "idame" && V("f_sec_as") === "300" ? 300 : 150);
       return ilk ? `subkütan olarak 0., 1., 2., 3. ve 4. haftalarda ${d} mg yükleme dozunu takiben 4 (dört) haftada bir ${d} mg dozunda` : `subkütan olarak 4 (dört) haftada bir ${d} mg dozunda`;
     }
     case "IXE": return ilk ? "subkütan olarak 0. haftada 160 mg yükleme dozunu takiben 4 (dört) haftada bir 80 mg dozunda" : "subkütan olarak 4 (dört) haftada bir 80 mg dozunda";
@@ -614,7 +614,7 @@ function doseText(dz, dr, st) {
       if (kgOk(k) && k <= 40) { const mk = V("f_can") === "300" ? 4 : 2; return `subkütan olarak 4 (dört) haftada bir ${mk} mg/kg (${Math.round(k * mk)} mg; vücut ağırlığı ${fmtKg(k)} kg) dozunda`; }
       return V("f_can") === "300" ? "subkütan olarak 4 (dört) haftada bir 300 mg dozunda" : "subkütan olarak 4 (dört) haftada bir 150 mg dozunda";
     }
-    case "KOL": return `yurt dışı preparatı${ydkPrep() ? ` (${esc(ydkPrep())})` : ""} olarak oral yoldan günde ${kolMg()} mg dozunda`;
+    case "KOL": return `${ydkHepsi() ? "yurt dışı preparatlarından biri" : "yurt dışı preparatı"}${ydkPrep() ? ` (${esc(ydkPrep())})` : ""} olarak oral yoldan günde ${kolMg()} mg dozunda`;
     case "ILO": { const k = num(V("f_kilo")); const g0 = num(V("f_ilo_gun")); const gun = Number.isInteger(g0) && g0 > 0 ? g0 : NaN; const ara = V("f_ilo_ara") || "8";
       const kurT = `${isFinite(gun) ? `${gun} (${YAZI[gun] || gun})` : MISS("gün")} günlük ${ara === "tek" ? "tek kür olarak" : "kürler halinde"}`;
       return `intravenöz infüzyon olarak günde 6 saat süreyle, tolere edilen doza göre 0,5–2,0 ng/kg/dakika dozunda (vücut ağırlığı ${kgOk(k) ? fmtKg(k) + " kg" : MISS("kg")}), ${kurT}${ara === "tek" ? "" : ` ${ara} (${YAZI[ara]}) haftada bir`}`; }
@@ -633,7 +633,7 @@ function medulaDoz(dz, dr, st) {
   const ilk = ["bas","int","gy","ge","yeniden"].includes(st);
   const kmg = (mgkg, max) => { const k = kiloMg(mgkg, max); return isFinite(k.mg) ? `${k.mg} mg` : "Vücut ağırlığına göre mg"; };
   const kk = num(V("f_kilo")), abaMg = !kgOk(kk) ? "500/750/1000 mg (vücut ağırlığına göre)" : kk < 60 ? "500 mg" : kk <= 100 ? "750 mg" : "1000 mg";
-  const secD = dz === "psa" ? ((V("f_sec_psa") || store.f_sec_psa) === "150" ? 150 : 300) : ((V("f_sec_as") || store.f_sec_as) === "300" ? 300 : 150);
+  const secD = dz === "psa" ? ((V("f_sec_psa") || store.f_sec_psa) === "150" ? 150 : 300) : (st === "idame" && V("f_sec_as") === "300" ? 300 : 150);
   const rtxAav = { "375": (() => { const b = num(V("f_bsa")); return `${isFinite(b) ? Math.round(b*375) + " mg" : "375 mg/m2"} · periyot 1 hafta · 4 doz`; })(), "500x2": "500 mg · 2 doz (2 hafta arayla)", "500": "500 mg · tek doz", "1000": "1000 mg · 2 doz (2 hafta arayla)" };
   const anaAcik = dz === "fmfa" && st === "devam" && V("f_devam_sekil") === "acik";
   const canAcik = dz === "fmfa" && st === "devam" && V("f_devam_sekil") === "acik";
@@ -716,7 +716,9 @@ function basdaiBas() { return `başlangıç BASDAİ: ${TN("f_bas0","başlangıç
 function capsDoz() { const k = num(V("f_kilo")); if (!kgOk(k)) return { t: MISS("doz (vücut ağırlığı)"), mg: NaN };
   if (k > 40) return { t: "150 mg", mg: 150 };
   const mk = k >= 15 ? 2 : 4; const mg = Math.round(k * mk); return { t: `${mk} mg/kg (${mg} mg; vücut ağırlığı ${fmtKg(k)} kg)`, mg }; }
-function ydkPrep() { const p = V("f_ydk_psec"); return p && p !== "diger" ? p : V("f_ydk_prep"); }
+const YDK_PREP = ["Colchicina Lirca 1 mg", "Colchicine Seid 1 mg", "Colchicine Opok 1 mg", "Colchicina Biofarm 1 mg"];
+function ydkHepsi() { return V("f_ydk_psec") === "hepsi"; }
+function ydkPrep() { const p = V("f_ydk_psec"); if (p === "hepsi") return YDK_PREP.slice(0, -1).join(", ") + " veya " + YDK_PREP[YDK_PREP.length - 1]; return p && p !== "diger" ? p : V("f_ydk_prep"); }
 function kstHesap() { const tam = id => { const v = num(V(id)); return Number.isInteger(v) && v > 0 ? v : NaN; };
   const g0 = num(V("f_kst_g")), g = isFinite(g0) && g0 > 0 ? g0 : NaN, x = tam("f_kst_x"), gun = tam("f_kst_gun"), pg = 4;
   if (!(isFinite(g) && isFinite(x) && isFinite(gun))) return { ok: false, g, x, gun, medula: "Doz, sıklık ve gün sayısını girin" };
@@ -747,7 +749,7 @@ function canGecisT(dz) {
   return dz === "fmfa" ? `3 aylık anakinra tedavisine rağmen yanıt alınamaması nedeniyle kanakinumab tedavisine${tbT()} geçilmiştir.` : `anakinra tedavisine yeterli yanıt alınamaması nedeniyle kanakinumab tedavisine${tbT()} geçilmiştir.`;
 }
 function kolMg() { const k = num(V("f_ydk_doz")); return isFinite(k) && k > 0 ? fmtE(k, 0) : MISS("mg"); }
-function kolKullanim() { return SON(`Hastanın kolşisin etken maddeli ilacın yurt dışı preparatını${ydkPrep() ? ` (${esc(ydkPrep())})` : ""} oral olarak günde ${kolMg()} mg dozunda, ${ay(sureN())} süreyle kullanması uygundur.`); }
+function kolKullanim() { return SON(`Hastanın kolşisin etken maddeli ilacın ${ydkHepsi() ? "yurt dışı preparatlarından birini" : "yurt dışı preparatını"}${ydkPrep() ? ` (${esc(ydkPrep())})` : ""} oral olarak günde ${kolMg()} mg dozunda, ${ay(sureN())} süreyle kullanması uygundur.`); }
 function basladi(ad) { return `${ad.toLocaleLowerCase("tr-TR")} tedavisine${tbT()} başlanmıştır`; }
 function akDonemCk(ck, ayN, yumusak) { const a = dParse(V("f_ak_bas")), b = dParse(V("f_ak_son")); if (!a || !b) { ck(false, "Ataksız dönem tarihleri gerekli"); return; }
   if (b < a) { ck(false, "Ataksız dönem sonu başlangıcından önce"); return; }
@@ -934,6 +936,7 @@ function build(dz, dr, st) {
       out.heyet = "Sağlık kurulu raporu (6'şar ay): romatoloji uzmanı; üçüncü basamakta klinik immünoloji veya FTR uzmanı da olabilir.";
       out.recEden = "Rapordaki uzmanlar veya iç hastalıkları uzmanı";
       out.notlar.push("16. haftadaki BASDAİ değerlendirmesi SUT'a göre yeni düzenlenecek reçete veya raporda belirtilir. Reçete açıklaması için '16. hafta değerlendirmesi' basamağını seçin.");
+      if (st === "idame" && V("f_sec_as") === "300") out.notlar.push("KÜB: klinik yanıta göre doz 300 mg'a yükseltilebilir.");
     } else {
       out.sut = ["genel", dz === "nr" ? "jak_nr" : "jak_as"]; degAy = "12 hafta";
       const neden = V("f_jak_neden") === "intol" ? "intolerans" : "yetersiz cevap";
@@ -992,7 +995,7 @@ function build(dz, dr, st) {
       out.sure = {def:6,max:6,opts:[6]};
       out.heyet = "Sağlık kurulu raporu (6'şar ay): romatoloji uzmanı."; out.recEden = "Romatoloji uzmanı";
       out.notlar.push("12. haftadaki PSARC değerlendirmesi SUT'a göre yeni düzenlenecek reçete veya raporda belirtilir.");
-      if (dr === "TOFA") out.notlar.push("Tofasitinib 5 mg KÜB'ünde PsA endikasyonu MTX ile kombine olarak tanımlıdır. XR 11 mg formun KÜB'ünde PsA endikasyonu bir veya daha fazla TNF blokerine yetersiz yanıt veya intoleransta, MTX kombinasyon şartı olmadan yer alır.");
+      if (dr === "TOFA" || dr === "TOFA_XR") out.notlar.push("Tofasitinib KÜB'ü (5 mg ve XR 11 mg): PsA endikasyonu en az bir DMARD'a ve en az bir TNF blokerine yetersiz yanıt veya intoleransta tanımlıdır; PsA'da biyolojik olmayan DMARD ile kombinasyon halinde kullanılır (monoterapi etkililiği çalışılmamıştır).");
     } else { out.sut = ["genel","apr"]; degAy = "16 hafta";
       on = `Psöriatik artritli hastada en az 3 farklı hastalık modifiye edici antiromatizmal ilaç uygun dozunda en az üçer ay kullanılmış olmasına rağmen hastalık aktivitesi kontrol altına alınamamıştır.`;
       out.sure = st === "bas" ? {def:4,max:6,opts:[4,6]} : {def:6,max:6,opts:[6]};
@@ -1023,7 +1026,7 @@ function build(dz, dr, st) {
     ck(!!ydkPrep(), ydkPrep() ? "Yurt dışı preparat seçildi" : "Yurt dışı preparat adının yazılması önerilir", true);
     out.notlar.push("SUT 4.3/6: yurt dışı ilaç raporunda etken madde, günlük kullanım dozu, uygulama planı ve süre belirtilir; reçete en fazla 90 günlük doz için yazılır. Yurt dışı kolşisin preparatları Ek-4/C listesindedir (Colchicina Biofarm, Colchicina Lirca, Colchicine Opok, Colchicine Seid).");
     out.notlar.push(dz === "fmf" ? "Katılım payı: FMF Ek-4/D kapsamında olduğundan alınmaz (SUT 4.3/5)." : "Katılım payı: gut için kolşisin Ek-4/D kapsamında değildir; katılım payı alınır.");
-    out.notlar.push("Bazı ilaç veri tabanlarında görülen 'yurt içi kolşisin preparatlarına alerji/direnç sağlık kurulu raporunda belirtilmeli' şartı resmî Ek-4/C ve SUT metninde yer almaz; rapor metni gerekçeyi yine de içerir.");
+    out.notlar.push("Yurt içi kolşisin preparatlarına alerji/direncin sağlık kurulu raporunda belirtilmesi şartı resmî Ek-4/C ve SUT metninde yer almaz; rapor metni gerekçeyi yine de içerir.");
     if (dz === "fmf") out.notlar.push("SUT 4.2.1.C-7 (2)-a: kolşisin 'öncelikle yurt içi, yanıt alınamazsa yurt dışı preparatlar' şeklinde kullanılır.");
   }
 
@@ -1067,7 +1070,7 @@ function build(dz, dr, st) {
     out.sut = ["genel","fmf"];
     out.heyet = "Sağlık kurulu raporu: resmi üçüncü basamakta en az bir romatoloji uzmanı."; out.recEden = "Romatoloji uzmanı";
     out.sure = {def:3, max:6, opts:[3,6], yok:true};
-    out.notlar.push("SUT 4.2.1.C-7/2-a'da amiloidozu olmayan FMF için rapor süresi yazılı değildir; anakinra ve kanakinumab ilaç veri tabanı kayıtlarında 'maksimum rapor süresi' bu endikasyon için 3 ay görünür. 3 ay önerilir (teşhis kodu 06.05 için Medula rapor süresi 2 yıl).");
+    out.notlar.push("SUT 4.2.1.C-7/2-a'da amiloidozu olmayan FMF için rapor süresi yazılı değildir; araçta varsayılan 3 ay, seçenek 6 ay.");
     const yas = dr === "CAN" && (["gy","d300"].includes(st) || (st === "devam" && fmfBazMod())) && V("f_yas18"); const gerek3 = yas ? 2 : 3;
     const tani = "Amiloidozu olmayan Ailevi Akdeniz Ateşi (FMF) tanılı hasta";
     const yd = !!V("f_kol_yd");
@@ -1149,7 +1152,7 @@ function build(dz, dr, st) {
   /* ---------------- CAPS ---------------- */
   else if (dz === "caps" && dr === "ANA") {
     out.sut = ["genel","caps"]; out.sure = {def:3, max:3, opts:[3]};
-    out.heyet = "Sağlık kurulu raporu: üçüncü basamakta romatoloji uzmanı (ilaç veri tabanı kaydında en fazla 3 ay)."; out.recEden = "Romatoloji uzmanı";
+    out.heyet = "Sağlık kurulu raporu: üçüncü basamakta romatoloji uzmanı (SUT 4.2.1.C-7 (4)-5: 3 ay süreli)."; out.recEden = "Romatoloji uzmanı";
     const tp = V("f_caps_tip") || "mws";
     const tn = ({ fcas:"ailevi soğuk otoinflamatuar sendrom (FCAS)", fcu:"ailevi soğuk ürtiker (FCU)", mws:"Muckle-Wells sendromu (MWS)", nomid:"neonatal başlangıçlı multisistem inflamatuar hastalık (NOMID) / kronik infantil nörolojik, kütanöz, artiküler sendrom (CINCA)" })[tp];
     const onay = tp === "fcu" ? ` Anakinra etken maddeli ilacın kullanımı için Sağlık Bakanlığı endikasyon dışı kullanım onayı mevcuttur (başvuru tarihi: ${TD("f_caps_t","başvuru tarihi")}; başvuru numarası: ${T("f_caps_no","başvuru numarası")}).` : "";
@@ -1374,7 +1377,7 @@ const FIELDS = {
 
   ak: `<fieldset class="grp"><legend>Ataksız dönem</legend><div class="row"><label class="f"><span>Dönem başlangıcı</span><input type="date" id="f_ak_bas"></label><label class="f"><span>Dönem sonu</span><input type="date" id="f_ak_son"></label></div><label class="f ak-afr"><span>AFR sonucu ve tarihi</span><input id="f_afr" placeholder="örn. CRP 2,1 mg/L, 10.10.2026"></label></fieldset>`,
   ydk: `<fieldset class="grp"><legend>Yurt dışı kolşisin</legend><div class="row"><label class="f"><span>Yurt içi preparatlara (Ek-4/C)</span><select id="f_ydk_neden"><option value="direnc">Direnç (yanıtsızlık)</option><option value="alerji">Alerji</option></select></label></div>
-    <div class="row"><label class="f"><span>Preparat</span><select id="f_ydk_psec"><option value="Colchicina Lirca 1 mg">Colchicina Lirca 1 mg</option><option value="Colchicine Seid 1 mg">Colchicine Seid 1 mg</option><option value="Colchicine Opok 1 mg">Colchicine Opok 1 mg</option><option value="Colchicina Biofarm 1 mg">Colchicina Biofarm 1 mg</option><option value="diger">Diğer (elle yaz)</option></select></label><label class="f ydk-el"><span>Preparat (elle)</span><input id="f_ydk_prep" placeholder="örn. preparat adı ve dozu"></label><label class="f"><span>Günlük doz (mg)</span><input id="f_ydk_doz" inputmode="decimal" placeholder="örn. 2"></label></div></fieldset>`,
+    <div class="row"><label class="f"><span>Preparat</span><select id="f_ydk_psec"><option value="Colchicina Lirca 1 mg">Colchicina Lirca 1 mg</option><option value="Colchicine Seid 1 mg">Colchicine Seid 1 mg</option><option value="Colchicine Opok 1 mg">Colchicine Opok 1 mg</option><option value="Colchicina Biofarm 1 mg">Colchicina Biofarm 1 mg</option><option value="hepsi">Hepsi (biri kullanılacak)</option><option value="diger">Diğer (elle yaz)</option></select></label><label class="f ydk-el"><span>Preparat (elle)</span><input id="f_ydk_prep" placeholder="örn. preparat adı ve dozu"></label><label class="f"><span>Günlük doz (mg)</span><input id="f_ydk_doz" inputmode="decimal" placeholder="örn. 2"></label></div></fieldset>`,
   feb: `<fieldset class="grp"><legend>Febuksostat (SUT 4.2.52)</legend><div class="row"><label class="f"><span>Gut artriti atağı</span><select id="f_feb_atak"><option value="var">Var (eşik > 6 mg/dl)</option><option value="yok">Yok (eşik > 8 mg/dl)</option></select></label><label class="f"><span>Tedavi öncesi serum ürik asit (mg/dl)</span><input id="f_ua0" inputmode="decimal" placeholder="örn. 8,4"></label><label class="f"><span>Tarih (isteğe bağlı)</span><input type="date" id="f_ua0_t"></label></div>
     <div class="row"><label class="f"><span>Allopurinol</span><select id="f_feb_ned"><option value="allo">3 ay sonra ürik asit ≥ 6</option><option value="intol">İntolerans</option><option value="kontr">Kontrendikasyon</option></select></label><label class="f feb-allo"><span>Allopurinol sonrası ürik asit (mg/dl)</span><input id="f_ua_allo" inputmode="decimal"></label><label class="f feb-allo"><span>Tarih (isteğe bağlı)</span><input type="date" id="f_ua_allo_t"></label><label class="f feb-acik"><span>Açıklama (isteğe bağlı)</span><input id="f_feb_acik" placeholder="örn. allopurinol ile DRESS öyküsü"></label></div>
     <div class="row feb-devam"><label class="f"><span>Güncel serum ürik asit (mg/dl)</span><input id="f_uaS" inputmode="decimal"></label><label class="f"><span>Tarih (isteğe bağlı)</span><input type="date" id="f_uaS_t"></label></div>
@@ -1500,7 +1503,7 @@ function fieldList(dz, dr, st) {
   if (dz === "edi") L.push("edi");
   if (dz === "edo") L.push("edo");
   if (dr === "ETN") L.push("etn"); if (dr === "SZP") L.push("szp"); if (dr === "INF" && ["as","nr","per"].includes(dz)) L.push("infAra"); if (dr === "BARI") L.push("bari");
-  if (dr === "SEC" && st !== "h16") L.push(dz === "psa" ? "secPsa" : "secAs"); if (dr === "UST") L.push("ust");
+  if (dr === "SEC" && st !== "h16" && (dz === "psa" || st !== "bas")) L.push(dz === "psa" ? "secPsa" : "secAs"); if (dr === "UST") L.push("ust");
   if (DRUGS[dr]?.kilo || dr === "ANA" || dr === "CAN" || dz === "edi") L.push("kilo");
   if (dr === "ANA") L.push("anaMgkg");
 
@@ -1713,7 +1716,7 @@ function render() {
   let icd = dz.icd, tes = dz.teshis, endik = "KÜB endikasyonu kapsamında";
   if (state.dz === "edi" && b.edi) { const t = (V("f_edi_tani") || "").split("|")[1]; icd = t || b.edi.icd; tes = b.edi.teshis === "15.02" ? "15.02 – Behçet hastalığı"
       : b.edi.id === "inf_bdv" ? (/Takayasu/.test(b.ediTani || "") ? "09.01.3.7 – Takayashu" : "09.01.3.8 – Temporal arteritis")
-      : b.edi.id === "tcz_tak" ? "20.00 – Ek-4/D listesinde yer almayan hastalıklar (Ek-4/D 9.2.22 maddesi 05.09.2026'dan itibaren tosilizumab–Takayasu muafiyetini içerir; ilaç teşhis listesinde 09.01.3.7 henüz görünmüyor, Medula'da seçilebiliyorsa 09.01.3.7 – Takayashu kullanın)"
+      : b.edi.id === "tcz_tak" ? "20.00 – Ek-4/D listesinde yer almayan hastalıklar (Ek-4/D 9.2.22 maddesi 05.09.2026'dan itibaren tosilizumab–Takayasu muafiyetini içerir; Medula'da 09.01.3.7 – Takayashu seçilebiliyorsa onu, seçilemiyorsa 20.00 kullanın)"
       : b.edi.id === "mmf" && /^(sistemik skleroz|undiferansiye)/.test(b.ediTani || "") ? "09.01.4 – Skleroderma, mikst konnektif doku hastalığı (EK-4/D yıldızlı hastalık)"
       : b.edi.id === "mmf" && /^sistemik lupus/.test(b.ediTani || "") ? "09.01.1 – Sistemik lupus eritematozus ve ilişkili sendromlar (EK-4/D yıldızlı hastalık)"
       : b.edi.id === "mmf" && /^romatoid artrit/.test(b.ediTani || "") ? "09.01.5.1 – Romatoid artrit (EK-4/D yıldızlı hastalık)"
@@ -1725,7 +1728,7 @@ function render() {
   if (state.dz === "paf") endik = "SUT 4.2.1.C-7 (3) · Sağlık Bakanlığı endikasyon dışı onayı şartı";
   if (state.dz === "caps") endik = state.dr === "ANA" ? (V("f_caps_tip") === "fcu" ? "SUT 4.2.1.C-7 (4) · FCU'da Sağlık Bakanlığı endikasyon dışı onayı şartı" : "SUT 4.2.1.C-7 (4) · tedaviye anakinra ile başlanır") : "Kanakinumab: KÜB'de CAPS endikasyonu var (SUT 4.2.1.C-7 (4))";
   if (state.dz === "caps" && state.dr === "ANA" && V("f_caps_tip") === "fcu") tes = "21.01 (hasta katılım paysız) veya 20.01 (paylı) – İlacın endikasyonu, maksimum dozu için ilaca ve şahsa SB tarafından verilen rapor + 15.13 – Ailesel (herediter) otoinflamatuar hastalıklar";
-  if (state.dz === "paf") tes = "21.01 (hasta katılım paysız) veya 20.01 (paylı) – İlacın endikasyonu, maksimum dozu için ilaca ve şahsa SB tarafından verilen rapor (anakinra/kanakinumab teşhis kodu listesinde TRAPS/HIDS için ayrı kod yok)";
+  if (state.dz === "paf") tes = "21.01 (hasta katılım paysız) veya 20.01 (paylı) – İlacın endikasyonu, maksimum dozu için ilaca ve şahsa SB tarafından verilen rapor (Ek-4/D 15.13'te TRAPS/HIDS sayılmamıştır; kanakinumab ve anakinra KÜB'ünde TRAPS/HIDS endikasyonu yoktur)";
   if (state.dz === "gut" && state.dr === "FEB") tes = "20.00 – Ek-4/D listesinde yer almayan hastalıklar (hasta katılım paylı)";
   if (state.dz === "sscdu" && ["SIL","TAD"].includes(state.dr)) { icd = "I73.0 (+ M34.x)"; tes = "20.00 – Ek-4/D listesinde yer almayan hastalıklar (Raynaud için 04.11 – Raynaud hastalığı kodunu da Medula'da kontrol edin)"; endik = `Endikasyon dışı · ${EDI_KAYNAK} · Romatoloji sekmesi`; }
   if (state.dz === "sscdu" && state.dr === "ILO") endik = "KÜB endikasyonu: diğer tedavilere cevap vermeyen ve ciddi kısıtlamaya neden olan Raynaud fenomeni · SUT 4.2.43/1";
@@ -1734,7 +1737,7 @@ function render() {
     tes = `${t ? t.tes : "Hastalığın kendi teşhis kodu"} + 21.01 – İlacın endikasyonu, maksimum dozu için ilaca ve şahsa SB tarafından verilen rapor (hasta katılım paysız) veya 20.01 (hasta katılım paylı)`;
     endik = V("f_edo_tur") === "yd" ? "Yurt dışı ilaç · Sağlık Bakanlığı onaylı (SUT 4.3)" : "Endikasyon dışı · Sağlık Bakanlığı onaylı (SUT 4.1.4)"; }
   if (state.dz === "aav") { const mpa = V("f_aav_tani") === "mpa"; icd = mpa ? "M31.7" : "M31.3"; tes = mpa ? "09.01.3.10 – Mikroskopik polianjitis" : "09.01.3.9 – Wegener granülomatozis"; }
-  if (state.dz === "dha") tes = state.dr === "TCZ_SC" ? "09.01.3.8 – Temporal arteritis" : "20.00 – Ek-4/D listesinde yer almayan hastalıklar (Ek-4/D 9.2.33 maddesi 03.12.2025'ten itibaren upadasitinib–temporal arterit muafiyetini içerir; ilaç teşhis listesinde 09.01.3.8 henüz görünmüyor, Medula'da seçilebiliyorsa 09.01.3.8 – Temporal arteritis kullanın)";
+  if (state.dz === "dha") tes = state.dr === "TCZ_SC" ? "09.01.3.8 – Temporal arteritis" : "20.00 – Ek-4/D listesinde yer almayan hastalıklar (Ek-4/D 9.2.33 maddesi 03.12.2025'ten itibaren upadasitinib–temporal arterit muafiyetini içerir; Medula'da 09.01.3.8 – Temporal arteritis seçilebiliyorsa onu, seçilemiyorsa 20.00 kullanın)";
   $("#k_icd").textContent = icd; $("#k_tes").textContent = tes;
   $("#k_sure").textContent = b.recete ? "Reçeteye yazılır" : `${V("f_sure") || b.sure.def} ay (${b.sure.yok ? (state.dz === "edo" ? "onaydaki süreyi aşmamalı" : "SUT'ta süre belirtilmemiş") : `SUT üst sınırı ${b.sure.max} ay`})`;
   $("#k_heyet").textContent = b.heyet || "—"; $("#k_rec").textContent = b.recEden || "—";
