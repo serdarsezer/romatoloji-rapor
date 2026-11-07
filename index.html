@@ -78,6 +78,7 @@ button.x{border:0;background:transparent;color:var(--muted);font-size:1.1rem;cur
 .pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.no{background:var(--no-soft);color:var(--no)} .pill.na{background:var(--soft);color:var(--muted)}
 .sure-tek{display:block;padding:7px 0;font-size:.9rem}
 #outText{font:400 1rem/1.65 var(--serif);background:var(--quote);border:1px solid var(--line);border-radius:4px;padding:14px 16px;white-space:pre-wrap;overflow-wrap:anywhere}
+footer.src .gorus a{color:var(--accent)}
 mark.ph{background:var(--ph);color:var(--ph-ink);border-radius:3px;padding:0 4px;font:500 .8em var(--sans)}
 mark.red{background:var(--no-soft);color:var(--no);border-radius:3px;padding:0 4px;font:500 .8em var(--sans)}
 input.bad{border-color:var(--no);box-shadow:0 0 0 1px var(--no)}
@@ -191,6 +192,7 @@ footer.src p.sorumluluk{color:var(--ink)}
   <p class="sorumluluk"><b>Önemli:</b> SUT metinleri, SGK'nın yayımladığı 02.10.2026 tarihli işlenmiş güncel Sağlık Uygulama Tebliği metnine göredir (30.10.2026'da karşılaştırılmıştır). Bu tarihten sonraki SUT değişikliklerini kontrol edin; güncel SUT esas alınmalıdır. Üretilen metnin doğruluğu ve SUT'a uygunluğu raporu düzenleyen hekimin sorumluluğundadır.</p>
   <p>Endikasyon dışı kullanım satırları TİTCK'nın 15.12.2022 tarihli "Ek Onayı Alınmadan Kullanılabilecek Endikasyon Dışı İlaç Listesi"nden aynen aktarılmıştır. Rapor teşhis kodları SGK Ek-4/D listesi ve Medula raporlarında kullanılan kodlarla karşılaştırılmıştır; "doğrulayın" veya "kontrol edin" notu olanları Medula'da kontrol edin.</p>
   <p>Araç hasta kimlik bilgisi istemez; girilen değerler yalnızca kullandığınız tarayıcıda kalır ve hiçbir yere gönderilmez.</p>
+  <p class="gorus"><b>Görüş ve öneri:</b> <a href="mailto:serdarsezer1987@hotmail.com?subject=Romatoloji%20Rapor%20A%C3%A7%C4%B1klamalar%C4%B1%20%E2%80%93%20g%C3%B6r%C3%BC%C5%9F%20ve%20%C3%B6neri">serdarsezer1987@hotmail.com</a> · Hasta adı, T.C. kimlik no, rapor no gibi kişisel veri yazmayın.</p>
 </footer>
 </div>
 <script>
@@ -509,12 +511,12 @@ function stagesFor(dz, dr) {
     return [["bas","Başlangıç raporu (3 ay)"],["r2","3. ay değerlendirmesi – 2. rapor (3 ay)"],["idame","İdame raporu (6 ay)"]];
   }
   if (["as","nr","per"].includes(dz)) {
-    if (c === "il17") return [["bas","Başlangıç raporu (4 ay)"],["idame","16. hafta değerlendirmesi / idame raporu (6 ay)"]];
+    if (c === "il17") return [["bas","Başlangıç raporu (4 ay)"],["idame","İdame raporu (6 ay)"]];
     return [["bas","Başlangıç raporu (3 ay)"],["idame", c === "jak" ? "12. hafta değerlendirmesi / idame raporu (6 ay)" : "3. ay değerlendirmesi / idame raporu (6 ay)"]];
   }
   if (dz === "psa") {
-    if (c === "il17") return [["bas","Başlangıç raporu (4 ay)"],["idame","16. hafta değerlendirmesi / idame raporu (6 ay)"]];
-    if (c === "jak") return [["bas","Başlangıç raporu (3 ay)"],["idame","12. hafta değerlendirmesi / idame raporu (6 ay)"]];
+    if (c === "il17") return [["bas","Başlangıç raporu (4 ay)"],["idame","İdame raporu (6 ay)"]];
+    if (c === "jak") return [["bas","Başlangıç raporu (3 ay)"],["idame","İdame raporu (6 ay)"]];
     if (c === "apr") return [["bas","Başlangıç raporu"],["idame","16. hafta değerlendirmesi / idame raporu (6 ay)"]];
     return [["bas","Başlangıç raporu (3 ay)"],["idame","3. ay değerlendirmesi / idame raporu (6 ay)"]];
   }
@@ -751,10 +753,6 @@ function canGecisT(dz) {
 function kolMg() { const k = num(V("f_ydk_doz")); return isFinite(k) && k > 0 ? fmtE(k, 0) : MISS("mg"); }
 function kolKullanim() { return SON(`Hastanın kolşisin etken maddeli ilacın ${ydkHepsi() ? "yurt dışı preparatlarından birini" : "yurt dışı preparatını"}${ydkPrep() ? ` (${esc(ydkPrep())})` : ""} oral olarak günde ${kolMg()} mg dozunda, ${ay(sureN())} süreyle kullanması uygundur.`); }
 function basladi(ad) { return `${ad.toLocaleLowerCase("tr-TR")} tedavisine${tbT()} başlanmıştır`; }
-function akDonemCk(ck, ayN, yumusak) { const a = dParse(V("f_ak_bas")), b = dParse(V("f_ak_son")); if (!a || !b) { ck(false, "Ataksız dönem tarihleri gerekli"); return; }
-  if (b < a) { ck(false, "Ataksız dönem sonu başlangıcından önce"); return; }
-  const lim = addMonths(a, ayN); lim.setDate(lim.getDate() - 1); const ok = b >= lim; ck(ok, `Ataksız dönem ${daysBetween(a, b) + 1} gün${ok ? ` (${ayN} ay doldu)` : `: ${ayN} ay dolmamış`}`);
-  const r = bugun(); if (b <= r) { const yeni = b >= addMonths(r, -6); ck(yeni, yeni ? "Ataksız dönem son 6 ay içinde tamamlanmış" : (yumusak ? "Değerlendirilen 6 aylık dönem 6 aydan daha önce bitmiş: tarihleri kontrol edin" : "Ataksız dönem 6 aydan daha önce bitmiş: SUT doz aralığının takip eden 6 ay içinde açılmasını öngörür"), !yeni && !!yumusak); } }
 function psarcText() {
   return "psöriatik artrit yanıt kriterlerine (PSARC) göre yanıt alınmıştır";
 }
@@ -937,7 +935,7 @@ function build(dz, dr, st) {
       out.sure = st === "bas" ? {def:4,max:6,opts:[4]} : {def:6,max:6,opts:[6]};
       out.heyet = "Sağlık kurulu raporu (6'şar ay): romatoloji uzmanı; üçüncü basamakta klinik immünoloji veya FTR uzmanı da olabilir.";
       out.recEden = "Rapordaki uzmanlar veya iç hastalıkları uzmanı";
-      if (st === "bas") out.notlar.push("SUT: 16 haftalık kullanım sonunda BASDAİ'de en az 2 birim düzelme olduğu yeni düzenlenecek reçete/raporda belirtilir. Araçta başlangıç raporu 4 ay düzenlenir; değerlendirme '16. hafta değerlendirmesi / idame raporu' ile yazılır.");
+      if (st === "bas") out.notlar.push("SUT: 16 haftalık kullanım sonunda BASDAİ'de en az 2 birim düzelme olduğu yeni düzenlenecek reçete/raporda belirtilir. Araçta başlangıç raporu 4 ay düzenlenir; değerlendirme 'İdame raporu' basamağıyla yazılır.");
     } else {
       out.sut = ["genel", dz === "nr" ? "jak_nr" : "jak_as"]; degAy = "12 hafta";
       const neden = V("f_jak_neden") === "intol" ? "intolerans" : "yetersiz cevap";
@@ -991,14 +989,14 @@ function build(dz, dr, st) {
       on = `Aktif psöriatik artritli erişkin hastada en az 3 farklı hastalık modifiye edici antiromatizmal ilaç 3'er ay süre ile uygun dozda kullanılmış${anti} olmasına rağmen hastalık aktivitesi kontrol altına alınamamıştır.`;
       out.sure = st === "bas" ? {def:4,max:6,opts:[4]} : {def:6,max:6,opts:[6]};
       out.heyet = "Sağlık kurulu raporu (6'şar ay): romatoloji veya FTR uzmanı."; out.recEden = "Romatoloji veya FTR uzmanı";
-      if (st === "bas") out.notlar.push("SUT: 16 haftalık kullanım sonunda PSARC'a göre yeterli yanıt alındığı yeni düzenlenecek reçete/raporda belirtilir. Araçta başlangıç raporu 4 ay düzenlenir; değerlendirme '16. hafta değerlendirmesi / idame raporu' ile yazılır.");
+      if (st === "bas") out.notlar.push("SUT: 16 haftalık kullanım sonunda PSARC'a göre yeterli yanıt alındığı yeni düzenlenecek reçete/raporda belirtilir. Araçta başlangıç raporu 4 ay düzenlenir; değerlendirme 'İdame raporu' basamağıyla yazılır.");
     } else if (c === "jak") { out.sut = ["genel","jak_psa"]; degAy = "12 haftalık ilaç kullanımı";
       on = V("f_jak_neden") === "intol"
         ? `Aktif psöriatik artritli erişkin hastada en az 3 farklı hastalık modifiye edici antiromatizmal ilaç 3'er ay süre ile uygun dozda kullanılmış olup en az bir anti-TNF ajanına intolerans mevcuttur.`
         : `Aktif psöriatik artritli erişkin hastada en az 3 farklı hastalık modifiye edici antiromatizmal ilaç 3'er ay süre ile uygun dozda kullanılmış ve sonrasında en az bir anti-TNF ajanı en az 3 ay süreyle kullanılmış olmasına rağmen hastalık aktivitesi kontrol altına alınamamıştır.`;
       out.sure = st === "bas" ? {def:3,max:6,opts:[3]} : {def:6,max:6,opts:[6]};
       out.heyet = "Sağlık kurulu raporu (6'şar ay): romatoloji uzmanı."; out.recEden = "Romatoloji uzmanı";
-      if (st === "bas") out.notlar.push("SUT: 12 haftalık kullanım sonunda PSARC'a göre yeterli yanıt alındığı yeni düzenlenecek reçete/raporda belirtilir. Araçta başlangıç raporu 3 ay düzenlenir; değerlendirme '12. hafta değerlendirmesi / idame raporu' ile yazılır.");
+      if (st === "bas") out.notlar.push("SUT: 12 haftalık kullanım sonunda PSARC'a göre yeterli yanıt alındığı yeni düzenlenecek reçete/raporda belirtilir. Araçta başlangıç raporu 3 ay düzenlenir; değerlendirme 'İdame raporu' basamağıyla yazılır.");
       if (dr === "TOFA" || dr === "TOFA_XR") out.notlar.push("Tofasitinib KÜB'ü (5 mg ve XR 11 mg): PsA endikasyonu en az bir DMARD'a ve en az bir TNF blokerine yetersiz yanıt veya intoleransta tanımlıdır; PsA'da biyolojik olmayan DMARD ile kombinasyon halinde kullanılır (monoterapi etkililiği çalışılmamıştır).");
     } else { out.sut = ["genel","apr"]; degAy = "16 hafta";
       on = `Psöriatik artritli hastada en az 3 farklı hastalık modifiye edici antiromatizmal ilaç uygun dozunda en az üçer ay kullanılmış olmasına rağmen hastalık aktivitesi kontrol altına alınamamıştır.`;
@@ -1114,10 +1112,10 @@ function build(dz, dr, st) {
         if (fmfBazMod()) bazCk(ck, gerek3);
         out.notlar.push("Tedavi altında 6 ay ataksız dönem ve normal akut faz reaktanları varsa SUT doz aralığının açılmasını şart koşar; 'Doz aralığı açma' basamaklarını kullanın."); }
       if (["ac2","ac3"].includes(st)) out.sure = {def:3, max:6, opts:[3,6], yok:true};
-      if (st === "ac2") { out.text = `${pre} Kanakinumab tedavisi altında ${TD("f_ak_bas","ataksız dönem başlangıcı")}–${TD("f_ak_son","ataksız dönem sonu")} tarihleri arasında 6 ay ataksız dönem mevcuttur ve akut faz reaktanları normaldir (${T("f_afr","AFR sonucu ve tarihi")}). Doz aralığı 2 ayda bire açılmıştır. `.replace("Doz aralığı 2 ayda bire açılmıştır. ", SON("Doz aralığı 2 ayda bire açılmıştır.") + " ") + kullanim(dr, dz, st) + formsText();
-        akDonemCk(ck, 6); }
-      if (st === "ac3") { out.text = `${pre} Kanakinumab doz aralığı 2 ayda bire açılmış olup ${TD("f_ak_bas","dönem başlangıcı")}–${TD("f_ak_son","dönem sonu")} tarihleri arasındaki 6 ayda atak görülmemiştir. Doz aralığı 3 ayda bire açılmıştır. `.replace("Doz aralığı 3 ayda bire açılmıştır. ", SON("Doz aralığı 3 ayda bire açılmıştır.") + " ") + kullanim(dr, dz, st) + formsText();
-        akDonemCk(ck, 6, true); out.notlar.push("SUT: 3 ayda bir uygulanan dönemde 6 ay ataksız olunması ve akut faz reaktanlarının normal olması halinde kanakinumab tedavisi sonlandırılır."); }
+      if (st === "ac2") { out.text = `${pre} Kanakinumab tedavisi altında 6 ay ataksız dönem mevcuttur ve akut faz reaktanları normaldir. Doz aralığı 2 ayda bire açılmıştır. `.replace("Doz aralığı 2 ayda bire açılmıştır. ", SON("Doz aralığı 2 ayda bire açılmıştır.") + " ") + kullanim(dr, dz, st) + formsText();
+      }
+      if (st === "ac3") { out.text = `${pre} Kanakinumab doz aralığı 2 ayda bire açılmış olup 6 ay ataksız dönem mevcuttur ve akut faz reaktanları normaldir. Doz aralığı 3 ayda bire açılmıştır. `.replace("Doz aralığı 3 ayda bire açılmıştır. ", SON("Doz aralığı 3 ayda bire açılmıştır.") + " ") + kullanim(dr, dz, st) + formsText();
+        out.notlar.push("SUT: 3 ayda bir uygulanan dönemde 6 ay ataksız olunması ve akut faz reaktanlarının normal olması halinde kanakinumab tedavisi sonlandırılır."); }
       if (st === "d300") { out.text = `${pre} Hasta, ara vermeden 6 ay süreyle düzenli olarak 4 haftada bir ${(kgOk(num(V("f_kilo"))) && num(V("f_kilo")) <= 40) ? "2 mg/kg" : "150 mg"} kanakinumab kullanmasına rağmen son 3 ay içerisinde ${atakText(3, gerek3)}; yeterli yanıt alınamamıştır. ` + kullanim(dr, dz, st) + formsText();
         const e = atakEval(3, gerek3); atakCk(ck, e, 3, gerek3); }
       if (st === "yeniden") { out.text = `${pre} Kanakinumab tedavisine 6 aydan fazla süre ara verilmiştir. Hasta bu süre zarfında ${atakText(6, 3)}. ` + SON("Başlangıç kriterleri aranmaksızın kanakinumab tedavisine devam edilmektedir.") + " " + kullanim(dr, dz, st) + formsText();
@@ -1384,7 +1382,6 @@ const FIELDS = {
 
 
 
-  ak: `<fieldset class="grp"><legend>Ataksız dönem</legend><div class="row"><label class="f"><span>Dönem başlangıcı</span><input type="date" id="f_ak_bas"></label><label class="f"><span>Dönem sonu</span><input type="date" id="f_ak_son"></label></div><label class="f ak-afr"><span>AFR sonucu ve tarihi</span><input id="f_afr" placeholder="örn. CRP 2,1 mg/L, 10.10.2026"></label></fieldset>`,
   ydk: `<fieldset class="grp"><legend>Yurt dışı kolşisin</legend><div class="row"><label class="f"><span>Yurt içi preparatlara (Ek-4/C)</span><select id="f_ydk_neden"><option value="direnc">Direnç (yanıtsızlık)</option><option value="alerji">Alerji</option></select></label></div>
     <div class="row"><label class="f"><span>Preparat</span><select id="f_ydk_psec"><option value="Colchicina Lirca 1 mg">Colchicina Lirca 1 mg</option><option value="Colchicine Seid 1 mg">Colchicine Seid 1 mg</option><option value="Colchicine Opok 1 mg">Colchicine Opok 1 mg</option><option value="Colchicina Biofarm 1 mg">Colchicina Biofarm 1 mg</option><option value="hepsi">Hepsi (biri kullanılacak)</option><option value="diger">Diğer (elle yaz)</option></select></label><label class="f ydk-el"><span>Preparat (elle)</span><input id="f_ydk_prep" placeholder="örn. preparat adı ve dozu"></label><label class="f"><span>Günlük doz (mg)</span><input id="f_ydk_doz" inputmode="decimal" placeholder="örn. 2"></label></div></fieldset>`,
   feb: `<fieldset class="grp"><legend>Febuksostat (SUT 4.2.52)</legend><div class="row"><label class="f"><span>Gut artriti atağı</span><select id="f_feb_atak"><option value="var">Var (eşik > 6 mg/dl)</option><option value="yok">Yok (eşik > 8 mg/dl)</option></select></label><label class="f"><span>Tedavi öncesi serum ürik asit (mg/dl)</span><input id="f_ua0" inputmode="decimal" placeholder="örn. 8,4"></label><label class="f"><span>Tarih (isteğe bağlı)</span><input type="date" id="f_ua0_t"></label></div>
@@ -1502,7 +1499,7 @@ function fieldList(dz, dr, st) {
   if (dz === "paf") { L.push("paf"); if (dr === "CAN" && st === "devam") L.push("canGecis", "pafDevam"); if (st === "ge") L.push("konsult"); if (dr === "CAN" && st === "devam") L.push("can"); }
   if (dz === "caps" && dr === "ANA") L.push("caps", "capsOnay");
   else if (dz === "caps") { L.push("caps"); if (["d3","devam"].includes(st)) L.push("canGecis"); if (st === "ge") L.push("yanEtki"); }
-  if (dz === "fmf" && dr !== "KOL") { if (dr === "ANA" && st === "bas") L.push("kol"); if (dr === "ANA" && ["devam","yeniden"].includes(st)) L.push("anaBas", "kol"); if (dr === "CAN") L.push("kolGecmis", "kol"); if (dr === "CAN" && ["devam","ac2","ac3","d300","yeniden"].includes(st)) L.push("canGecis"); if (["ac2","ac3"].includes(st)) L.push("ak"); if (["bas","int","gy","d300","yeniden"].includes(st)) L.push("atak"); if ((dr === "ANA" && st === "devam") || (dr === "CAN" && ["devam","ac2","ac3","d300"].includes(st))) L.push("baz"); if (dr === "CAN" && ["gy","d300","devam","ac2","ac3"].includes(st)) L.push("yas18"); if (st === "ge") L.push("konsult"); if (st === "devam" && dr === "CAN") L.push("canAcil"); if (dr === "CAN" && !["gy","ge","d300"].includes(st)) L.push("can"); }
+  if (dz === "fmf" && dr !== "KOL") { if (dr === "ANA" && st === "bas") L.push("kol"); if (dr === "ANA" && ["devam","yeniden"].includes(st)) L.push("anaBas", "kol"); if (dr === "CAN") L.push("kolGecmis", "kol"); if (dr === "CAN" && ["devam","ac2","ac3","d300","yeniden"].includes(st)) L.push("canGecis"); if (["bas","int","gy","d300","yeniden"].includes(st)) L.push("atak"); if ((dr === "ANA" && st === "devam") || (dr === "CAN" && ["devam","ac2","ac3","d300"].includes(st))) L.push("baz"); if (dr === "CAN" && ["gy","d300","devam","ac2","ac3"].includes(st)) L.push("yas18"); if (st === "ge") L.push("konsult"); if (st === "devam" && dr === "CAN") L.push("canAcil"); if (dr === "CAN" && !["gy","ge","d300"].includes(st)) L.push("can"); }
   if (dz === "fmfa") { L.push("amil"); if (dr === "CAN" && st === "devam") L.push("canGecis"); if (st === "gy") L.push("amGerekce"); if (st === "ge") L.push("konsult"); if (st === "devam") L.push("devamSekil"); if (dr === "CAN" && st === "devam") L.push("can"); }
   if (dz === "aosd") { L.push("aosd");  }
   if (dz === "dha") L.push("dha");
@@ -1614,6 +1611,7 @@ function refreshFields(temiz) {
   if ($("#f_prev")) $$("#f_prev option").forEach(o => { o.hidden = o.disabled = (!!o.dataset.only && !o.dataset.only.split(" ").includes(state.dr)) || (!!o.dataset.devam && state.st === "bas"); if (o.hidden && o.selected) $("#f_prev").value = "kullandi"; });
   if ($("#f_prev")) $("#f_prev").closest(".f").hidden = $$("#f_prev option").filter(o => !o.hidden).length < 2;
   if ($("#f_inf_ara") && !store.f_inf_ara) $("#f_inf_ara").value = "6";
+  if ($("#f_kol_yd") && !("f_kol_yd" in store)) { $("#f_kol_yd").checked = true; store.f_kol_yd = true; }
   if ($("#f_ilo_gun") && !store.f_ilo_gun) { $("#f_ilo_gun").value = "5"; store.f_ilo_gun = "5"; }
   if ($("#f_ilo_ara") && !store.f_ilo_ara) { $("#f_ilo_ara").value = "8"; store.f_ilo_ara = "8"; }
   if ($("#f_kst_g")) [["f_kst_g","8"],["f_kst_x","3"],["f_kst_gun","11"]].forEach(([i, v]) => { if (!store[i]) { $("#" + i).value = v; store[i] = v; } });
@@ -1657,7 +1655,7 @@ function toggles() {
   const sh = (sel, on) => $$(sel).forEach(e => e.hidden = !on);
   sh(".bki", V("f_prev") === "bki");
   { const lb = $("#f_basS")?.closest(".f")?.querySelector("span"); if (lb) lb.textContent = state.st === "h16" ? "16. hafta BASDAİ" : "Güncel BASDAİ"; }
-  sh(".ak-afr", state.st !== "ac3");
+  
   sh(".mrblok", state.dz !== "per" || DRUGS[state.dr]?.sinif === "il17");
   { const dl = $('#f_dha_dayanak option[value="liste"]'); if (dl) { const aza = (V("f_dha_ilac") || "aza") === "aza"; dl.disabled = !aza; if (!aza && $("#f_dha_dayanak").value === "liste") { $("#f_dha_dayanak").value = "onay"; store.f_dha_dayanak = "onay"; store.__dhaZorla = 1; }
       if (aza && store.__dhaZorla) { $("#f_dha_dayanak").value = "liste"; store.f_dha_dayanak = "liste"; store.__dhaZorla = 0; } } }
