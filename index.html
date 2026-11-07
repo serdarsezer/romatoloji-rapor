@@ -400,9 +400,9 @@ const fmtKg = k => fmtE(k, 0);
 const MISS = l => `⟦${l}⟧`;           // eksik değer işareti
 // 162: sayısal alanların geçerli aralıkları; geçersiz değer metne geçmez (boş sayılır), denetimde uyarı verilir
 const ARALIK = { f_das0:[0,10], f_das3:[0,10], f_dasS:[0,10], f_bas0:[0,10], f_basS:[0,10], f_dlco:[1,150], f_fvc:[1,150],
-  f_ua0:[0,30], f_ua_allo:[0,30], f_uaS:[0,30], f_bki:[10,80], f_kmy_l:[-10,5], f_kmy_ft:[-10,5], f_kmy_fb:[-10,5], f_uln:[0.01,500] };
+  f_ua0:[0,30], f_ua_allo:[0,30], f_uaS:[0,30], f_bki:[10,80], f_kmy_l:[-10,5], f_kmy_ft:[-10,5], f_kmy_fb:[-10,5], f_uln:[0.01,500], f_uln_b:[0.01,500] };
 const ARALIK_AD = { f_das0:"Başlangıç DAS28", f_das3:"3. ay DAS28", f_dasS:"Güncel DAS28", f_bas0:"Başlangıç BASDAİ", f_basS:"Güncel BASDAİ", f_dlco:"DLCO (%)", f_fvc:"FVC (%)",
-  f_ua0:"Serum ürik asit", f_ua_allo:"Allopurinol sonrası ürik asit", f_uaS:"Güncel ürik asit", f_bki:"BKİ", f_kmy_l:"Lomber T skoru", f_kmy_ft:"Femur total T skoru", f_kmy_fb:"Femur boynu T skoru", f_uln:"CRP normal üst sınırı" };
+  f_ua0:"Serum ürik asit", f_ua_allo:"Allopurinol sonrası ürik asit", f_uaS:"Güncel ürik asit", f_bki:"BKİ", f_kmy_l:"Lomber T skoru", f_kmy_ft:"Femur total T skoru", f_kmy_fb:"Femur boynu T skoru", f_uln:"CRP normal üst sınırı", f_uln_b:"CRP normal üst sınırı (başlangıç atakları)" };
 function gecersiz(id, raw, el) {
   const r = ARALIK[id];
   if (r) { const n = num(raw); return !isFinite(n) || n < r[0] || n > r[1]; }
@@ -509,19 +509,19 @@ function stagesFor(dz, dr) {
     return [["bas","Başlangıç raporu (3 ay)"],["r2","3. ay değerlendirmesi – 2. rapor (3 ay)"],["idame","İdame raporu (6 ay)"]];
   }
   if (["as","nr","per"].includes(dz)) {
-    if (c === "il17") return [["bas","Başlangıç raporu (6 ay)"],["h16","16. hafta değerlendirmesi (reçete açıklaması)"],["idame","İdame raporu (6 ay)"]];
+    if (c === "il17") return [["bas","Başlangıç raporu (4 ay)"],["idame","16. hafta değerlendirmesi / idame raporu (6 ay)"]];
     return [["bas","Başlangıç raporu (3 ay)"],["idame", c === "jak" ? "12. hafta değerlendirmesi / idame raporu (6 ay)" : "3. ay değerlendirmesi / idame raporu (6 ay)"]];
   }
   if (dz === "psa") {
-    if (c === "il17") return [["bas","Başlangıç raporu (6 ay)"],["h16","16. hafta değerlendirmesi (reçete açıklaması)"],["idame","İdame raporu (6 ay)"]];
-    if (c === "jak") return [["bas","Başlangıç raporu (6 ay)"],["h16","12. hafta değerlendirmesi (reçete açıklaması)"],["idame","İdame raporu (6 ay)"]];
+    if (c === "il17") return [["bas","Başlangıç raporu (4 ay)"],["idame","16. hafta değerlendirmesi / idame raporu (6 ay)"]];
+    if (c === "jak") return [["bas","Başlangıç raporu (3 ay)"],["idame","12. hafta değerlendirmesi / idame raporu (6 ay)"]];
     if (c === "apr") return [["bas","Başlangıç raporu"],["idame","16. hafta değerlendirmesi / idame raporu (6 ay)"]];
     return [["bas","Başlangıç raporu (3 ay)"],["idame","3. ay değerlendirmesi / idame raporu (6 ay)"]];
   }
   if (dz === "fmf") {
     if (dr === "KOL") return [["bas","Yurt dışı kolşisin raporu"]];
     if (dr === "ANA") return [["bas","Başlangıç (kolşisine yanıtsızlık)"],["int","Başlangıç (kolşisin intoleransı – tek başına)"],["devam","Devam raporu"],["yeniden","6 aydan uzun ara sonrası"]];
-    return [["gy","Geçiş: anakinraya yanıtsızlık"],["ge","Geçiş: anakinra ile ciddi yan etki"],["devam","Devam raporu"],["ac2","Doz aralığı açma: 2 ayda bir (6 ay ataksız)"],["ac3","Doz aralığı açma: 3 ayda bir"],["d300","Doz artırımı: 4 haftada bir 300 mg"],["yeniden","6 aydan uzun ara sonrası"]];
+    return [["gy","Geçiş: anakinraya yanıtsızlık"],["ge","Geçiş: anakinra ile ciddi yan etki"],["devam","Devam raporu"],["ac2","Doz aralığı açma: 2 ayda bir (6 ay ataksız)"],["ac3","Doz aralığı açma: 3 ayda bir (6 ay ataksız)"],["d300","Doz artırımı: 4 haftada bir 300 mg"],["yeniden","6 aydan uzun ara sonrası"]];
   }
   if (dz === "fmfa") {
     if (dr === "ANA") return [["bas","Başlangıç raporu"],["devam","Devam raporu (1 yıl)"]];
@@ -590,7 +590,7 @@ function doseText(dz, dr, st) {
     case "BARI": return V("f_bari") === "2" ? "oral olarak günde 1 kez 2 mg dozunda" : "oral olarak günde 1 kez 4 mg dozunda";
     case "UPA": return "oral olarak günde 1 kez 15 mg dozunda";
     case "SEC": {
-      const d = dz === "psa" ? (V("f_sec_psa") === "150" ? 150 : 300) : (st === "idame" && V("f_sec_as") === "300" ? 300 : 150);
+      const d = dz === "psa" ? (V("f_sec_psa") === "150" ? 150 : 300) : 150;
       return ilk ? `subkütan olarak 0., 1., 2., 3. ve 4. haftalarda ${d} mg yükleme dozunu takiben 4 (dört) haftada bir ${d} mg dozunda` : `subkütan olarak 4 (dört) haftada bir ${d} mg dozunda`;
     }
     case "IXE": return ilk ? "subkütan olarak 0. haftada 160 mg yükleme dozunu takiben 4 (dört) haftada bir 80 mg dozunda" : "subkütan olarak 4 (dört) haftada bir 80 mg dozunda";
@@ -633,7 +633,7 @@ function medulaDoz(dz, dr, st) {
   const ilk = ["bas","int","gy","ge","yeniden"].includes(st);
   const kmg = (mgkg, max) => { const k = kiloMg(mgkg, max); return isFinite(k.mg) ? `${k.mg} mg` : "Vücut ağırlığına göre mg"; };
   const kk = num(V("f_kilo")), abaMg = !kgOk(kk) ? "500/750/1000 mg (vücut ağırlığına göre)" : kk < 60 ? "500 mg" : kk <= 100 ? "750 mg" : "1000 mg";
-  const secD = dz === "psa" ? ((V("f_sec_psa") || store.f_sec_psa) === "150" ? 150 : 300) : (st === "idame" && V("f_sec_as") === "300" ? 300 : 150);
+  const secD = dz === "psa" ? ((V("f_sec_psa") || store.f_sec_psa) === "150" ? 150 : 300) : 150;
   const rtxAav = { "375": (() => { const b = num(V("f_bsa")); return `${isFinite(b) ? Math.round(b*375) + " mg" : "375 mg/m2"} · periyot 1 hafta · 4 doz`; })(), "500x2": "500 mg · 2 doz (2 hafta arayla)", "500": "500 mg · tek doz", "1000": "1000 mg · 2 doz (2 hafta arayla)" };
   const anaAcik = dz === "fmfa" && st === "devam" && V("f_devam_sekil") === "acik";
   const canAcik = dz === "fmfa" && st === "devam" && V("f_devam_sekil") === "acik";
@@ -760,13 +760,13 @@ function psarcText() {
 }
 
 /* FMF atak cümlesi ve denetimi */
-function atakRows() {
-  return $$("#atakBody tr").map(tr => { const c = num(tr.querySelector(".a-crp").value); return { t: tr.querySelector("input[type=date]").value, crp: isFinite(c) && c >= 0 && c <= 1000 ? c : NaN, bad: isFinite(c) && (c < 0 || c > 1000) }; }).filter(r => !r.bad && (r.t || isFinite(r.crp)));
+function atakRows(sel = "#atakBody") {
+  return $$(sel + " tr").map(tr => { const c = num(tr.querySelector(".a-crp").value); return { t: tr.querySelector("input[type=date]").value, crp: isFinite(c) && c >= 0 && c <= 1000 ? c : NaN, bad: isFinite(c) && (c < 0 || c > 1000) }; }).filter(r => !r.bad && (r.t || isFinite(r.crp)));
 }
-function atakEval(pencereAy, gerek, pencereYok) {
-  const uln = num(V("f_uln")); const rt = bugun();
+function atakEval(pencereAy, gerek, pencereYok, sel = "#atakBody", ulnId = "f_uln") {
+  const uln = num(V(ulnId)); const rt = bugun();
   const bas = addMonths(rt, -pencereAy);
-  const rows = atakRows().filter(r => r.t).map(r => ({...r, d: dParse(r.t)})).sort((a,b) => a.d - b.d);
+  const rows = atakRows(sel).filter(r => r.t).map(r => ({...r, d: dParse(r.t)})).sort((a,b) => a.d - b.d);
   const uygun = []; let son = null;
   rows.forEach(r => {
     const icerde = pencereYok ? r.d <= rt : r.d >= bas && r.d <= rt; const yuksek = isFinite(uln) && isFinite(r.crp) && r.crp >= 2 * uln;
@@ -783,21 +783,23 @@ function atakListe() {
   return `Atak dönemlerine ait CRP değerleri: ${l || MISS("atak tarihleri ve CRP değerleri")}${isFinite(uln) ? ` (CRP normal üst sınırı ${fmtE(uln,1)} mg/L)` : ""}.`;
 }
 // 154/155: FMF devam raporunda isteğe bağlı başlangıç atakları (girilmezse yazılmaz, eksik sayılmaz)
+// 183: kanakinumab doz aralığı açma (2 ay, 3 ay) ve 300 mg doz artırımı basamaklarında da (ayrı tablo: #bazBody, f_uln_b)
 function fmfBazMod() {
-  if (CUR.dz !== "fmf" || CUR.st !== "devam") return false;
-  if (CUR.dr === "ANA") return (V("f_kol_gecmis") || "yanitsiz") !== "intol";
-  if (CUR.dr === "CAN") return V("f_can_gecis") !== "yanetki";
+  if (CUR.dz !== "fmf") return false;
+  if (CUR.dr === "ANA") return CUR.st === "devam" && (V("f_kol_gecmis") || "yanitsiz") !== "intol";
+  if (CUR.dr === "CAN") return ["devam","ac2","ac3","d300"].includes(CUR.st) && V("f_can_gecis") !== "yanetki";
   return false;
 }
-function bazSatir() { return atakRows().filter(r => r.t && isFinite(r.crp)).sort((a, b) => a.t < b.t ? -1 : 1); }
+function bazSatir() { return atakRows("#bazBody").filter(r => r.t && isFinite(r.crp) && dParse(r.t) <= bugun()).sort((a, b) => a.t < b.t ? -1 : 1); }
+function bazEval(gerek) { return atakEval(0, gerek, true, "#bazBody", "f_uln_b"); }
 function bazOps() {
   const rows = bazSatir(); if (!rows.length) return "";
-  const uln = num(V("f_uln")); const e = atakEval(0, 3, true); const hepsi = isFinite(uln) && e.rows.filter(r => isFinite(r.crp)).every(r => r.ok);
+  const uln = num(V("f_uln_b")); const e = bazEval(3); const hepsi = isFinite(uln) && e.rows.filter(r => isFinite(r.crp) && r.d <= bugun()).every(r => r.ok);
   return ` (${hepsi ? "atak dönemlerine ait en az 15 gün arayla ölçülmüş, normal üst sınırın en az 2 katı CRP değerleri" : "atak dönemlerine ait CRP değerleri"}: ${rows.map(r => `${fmtD(r.t)} CRP ${fmtE(r.crp,1)} mg/L`).join("; ")}${isFinite(uln) ? `; CRP normal üst sınırı ${fmtE(uln,1)} mg/L` : ""})`;
 }
 function bazCk(ck, gerek) {
   const rows = bazSatir(); if (!rows.length) return;
-  const e = atakEval(0, gerek, true);
+  const e = bazEval(gerek);
   if (!isFinite(e.uln)) { ck(false, "Başlangıç atakları: CRP üst sınırı yazılmadığı için 2 × üst sınır koşulu denetlenemedi", true); return; }
   const kotu = e.rows.filter(r => r.t && !r.ok).length;
   if (kotu) ck(false, `Başlangıç atakları: ${kotu} satır koşula uymuyor (CRP < 2 × üst sınır veya önceki ataktan < 15 gün)`, true);
@@ -932,11 +934,10 @@ function build(dz, dr, st) {
     } else if (c === "il17") {
       out.sut = ["genel","sec"]; degAy = "16 haftalık ilaç kullanımı";
       on = `Aktif ankilozan spondilitli erişkin hastada biri maksimum doz indometazin olmak üzere en az 3 farklı nonsteroid antiinflamatuar ilaç maksimum dozunda kullanılmasına rağmen yeterli cevap alınamamıştır (${basdaiBas()}).` + inflam(dz);
-      out.sure = {def:6,max:6,opts:[6]};
+      out.sure = st === "bas" ? {def:4,max:6,opts:[4]} : {def:6,max:6,opts:[6]};
       out.heyet = "Sağlık kurulu raporu (6'şar ay): romatoloji uzmanı; üçüncü basamakta klinik immünoloji veya FTR uzmanı da olabilir.";
       out.recEden = "Rapordaki uzmanlar veya iç hastalıkları uzmanı";
-      out.notlar.push("16. haftadaki BASDAİ değerlendirmesi SUT'a göre yeni düzenlenecek reçete veya raporda belirtilir. Reçete açıklaması için '16. hafta değerlendirmesi' basamağını seçin.");
-      if (st === "idame" && V("f_sec_as") === "300") out.notlar.push("KÜB: klinik yanıta göre doz 300 mg'a yükseltilebilir.");
+      if (st === "bas") out.notlar.push("SUT: 16 haftalık kullanım sonunda BASDAİ'de en az 2 birim düzelme olduğu yeni düzenlenecek reçete/raporda belirtilir. Araçta başlangıç raporu 4 ay düzenlenir; değerlendirme '16. hafta değerlendirmesi / idame raporu' ile yazılır.");
     } else {
       out.sut = ["genel", dz === "nr" ? "jak_nr" : "jak_as"]; degAy = "12 hafta";
       const neden = V("f_jak_neden") === "intol" ? "intolerans" : "yetersiz cevap";
@@ -985,16 +986,16 @@ function build(dz, dr, st) {
       out.heyet = "Sağlık kurulu raporu: romatoloji veya FTR uzmanı (en fazla 6 ay)."; out.recEden = "Romatoloji veya FTR uzmanı";
     } else if (c === "il17") { out.sut = ["genel", dr === "SEC" ? "sec" : "ixe"]; degAy = "16 haftalık ilaç kullanımı";
       on = `Aktif psöriatik artritli erişkin hastada en az 3 farklı hastalık modifiye edici antiromatizmal ilaç 3'er ay süre ile uygun dozda kullanılmış${anti} olmasına rağmen hastalık aktivitesi kontrol altına alınamamıştır.`;
-      out.sure = {def:6,max:6,opts:[6]};
+      out.sure = st === "bas" ? {def:4,max:6,opts:[4]} : {def:6,max:6,opts:[6]};
       out.heyet = "Sağlık kurulu raporu (6'şar ay): romatoloji veya FTR uzmanı."; out.recEden = "Romatoloji veya FTR uzmanı";
-      out.notlar.push("16. haftadaki PSARC değerlendirmesi SUT'a göre yeni düzenlenecek reçete veya raporda belirtilir.");
+      if (st === "bas") out.notlar.push("SUT: 16 haftalık kullanım sonunda PSARC'a göre yeterli yanıt alındığı yeni düzenlenecek reçete/raporda belirtilir. Araçta başlangıç raporu 4 ay düzenlenir; değerlendirme '16. hafta değerlendirmesi / idame raporu' ile yazılır.");
     } else if (c === "jak") { out.sut = ["genel","jak_psa"]; degAy = "12 haftalık ilaç kullanımı";
       on = V("f_jak_neden") === "intol"
         ? `Aktif psöriatik artritli erişkin hastada en az 3 farklı hastalık modifiye edici antiromatizmal ilaç 3'er ay süre ile uygun dozda kullanılmış olup en az bir anti-TNF ajanına intolerans mevcuttur.`
         : `Aktif psöriatik artritli erişkin hastada en az 3 farklı hastalık modifiye edici antiromatizmal ilaç 3'er ay süre ile uygun dozda kullanılmış ve sonrasında en az bir anti-TNF ajanı en az 3 ay süreyle kullanılmış olmasına rağmen hastalık aktivitesi kontrol altına alınamamıştır.`;
-      out.sure = {def:6,max:6,opts:[6]};
+      out.sure = st === "bas" ? {def:3,max:6,opts:[3]} : {def:6,max:6,opts:[6]};
       out.heyet = "Sağlık kurulu raporu (6'şar ay): romatoloji uzmanı."; out.recEden = "Romatoloji uzmanı";
-      out.notlar.push("12. haftadaki PSARC değerlendirmesi SUT'a göre yeni düzenlenecek reçete veya raporda belirtilir.");
+      if (st === "bas") out.notlar.push("SUT: 12 haftalık kullanım sonunda PSARC'a göre yeterli yanıt alındığı yeni düzenlenecek reçete/raporda belirtilir. Araçta başlangıç raporu 3 ay düzenlenir; değerlendirme '12. hafta değerlendirmesi / idame raporu' ile yazılır.");
       if (dr === "TOFA" || dr === "TOFA_XR") out.notlar.push("Tofasitinib KÜB'ü (5 mg ve XR 11 mg): PsA endikasyonu en az bir DMARD'a ve en az bir TNF blokerine yetersiz yanıt veya intoleransta tanımlıdır; PsA'da biyolojik olmayan DMARD ile kombinasyon halinde kullanılır (monoterapi etkililiği çalışılmamıştır).");
     } else { out.sut = ["genel","apr"]; degAy = "16 hafta";
       on = `Psöriatik artritli hastada en az 3 farklı hastalık modifiye edici antiromatizmal ilaç uygun dozunda en az üçer ay kullanılmış olmasına rağmen hastalık aktivitesi kontrol altına alınamamıştır.`;
@@ -1071,7 +1072,7 @@ function build(dz, dr, st) {
     out.heyet = "Sağlık kurulu raporu: resmi üçüncü basamakta en az bir romatoloji uzmanı."; out.recEden = "Romatoloji uzmanı";
     out.sure = {def:3, max:6, opts:[3,6], yok:true};
     out.notlar.push("SUT 4.2.1.C-7/2-a'da amiloidozu olmayan FMF için rapor süresi yazılı değildir; araçta varsayılan 3 ay, seçenek 6 ay.");
-    const yas = dr === "CAN" && (["gy","d300"].includes(st) || (st === "devam" && fmfBazMod())) && V("f_yas18"); const gerek3 = yas ? 2 : 3;
+    const yas = dr === "CAN" && (["gy","d300"].includes(st) || (["devam","ac2","ac3"].includes(st) && fmfBazMod())) && V("f_yas18"); const gerek3 = yas ? 2 : 3;
     const tani = "Amiloidozu olmayan Ailevi Akdeniz Ateşi (FMF) tanılı hasta";
     const yd = !!V("f_kol_yd");
     const kolK = `${tani}, tolere edilebilen maksimum dozda kolşisin içeren ` + (yd ? "öncelikle yurt içi preparatları kullanmış; yanıt alınamaması üzerine yurt dışı preparatlara geçilmiştir." : "öncelikle yurt içi preparatları kullanmıştır.");
@@ -1091,7 +1092,10 @@ function build(dz, dr, st) {
         const e = atakEval(6, 3); atakCk(ck, e, 6, 3); }
     } else {
       const kolOn = anaBasla("", "");
-      const pre = `${kolOn} ${cap(canGecisT(dz))}`;
+      const gecisCumle = () => { const ops = fmfBazMod() ? bazOps() : "";
+        return ops ? `Ara vermeden 3 ay süreyle düzenli anakinra kullanılmasına rağmen son 3 ay içerisinde akut faz reaktanları yüksekliği ile kanıtlanmış en az ${gerek3 === 2 ? "iki atak (18 yaşından küçük hasta)" : "üç atak"} geçirmesi${ops} nedeniyle kanakinumab tedavisine${tbT()} geçilmiştir.` : cap(canGecisT(dz)); };
+      const pre = `${kolOn} ${gecisCumle()}`;
+      if (["ac2","ac3","d300"].includes(st) && fmfBazMod()) bazCk(ck, gerek3);
       if (["gy","ge"].includes(st) && (V("f_kol_gecmis") || "yanitsiz") !== "intol" && !yd) ck(false, "Yurt dışı kolşisin preparatı kullanılmamış görünüyor. SUT 'öncelikle yurt içi, yanıt alınamazsa yurt dışı' der; eczacı sorgulayabilir.", true);
       if (st === "gy") { out.text = `${kolOn} Ara vermeden 3 ay süreyle düzenli anakinra kullanılmasına rağmen hasta son 3 ay içerisinde ${atakText(3, gerek3)}; yeterli yanıt alınamamıştır. ` + kullanim(dr, dz, st) + formsText();
         const e = atakEval(3, gerek3); atakCk(ck, e, 3, gerek3); }
@@ -1099,8 +1103,7 @@ function build(dz, dr, st) {
         ck(!!(V("f_kons_t") && V("f_kons_b")), V("f_kons_t") && V("f_kons_b") ? "Konsültasyon tarihi ve branşı girildi" : "Konsültasyon notunun tarihi ve branşı raporda yer almalı"); }
       if (st === "devam") { const ac = V("f_can_acil") || "atak";
         const acT = ac === "ilk6" ? "" : ` ${{ atak: "Son 6 ay içerisinde en az 1 atak görüldüğünden", afr: "Akut faz reaktanları normal olmadığından", ikisi: "Son 6 ay içerisinde en az 1 atak görüldüğünden ve akut faz reaktanları normal olmadığından" }[ac]} doz aralığı açılmamıştır.`;
-        const ops = fmfBazMod() ? bazOps() : "";
-        const gecis = ops ? `Ara vermeden 3 ay süreyle düzenli anakinra kullanılmasına rağmen son 3 ay içerisinde akut faz reaktanları yüksekliği ile kanıtlanmış en az ${gerek3 === 2 ? "iki atak (18 yaşından küçük hasta)" : "üç atak"} geçirmesi${ops} nedeniyle kanakinumab tedavisine${tbT()} geçilmiştir.` : cap(canGecisT(dz));
+        const gecis = gecisCumle();
         out.text = `${kolOn} ${gecis} Kanakinumab tedavisi altında düzenli 3 ay süreyle yapılan kontrollerde atak sıklığı ve şiddeti azalmıştır.${acT} ` + SON("Kanakinumab tedavisine devam edilmektedir.") + " " + kullanim(dr, dz, st) + formsText();
         if (fmfBazMod()) bazCk(ck, gerek3);
         out.notlar.push("Tedavi altında 6 ay ataksız dönem ve normal akut faz reaktanları varsa SUT doz aralığının açılmasını şart koşar; 'Doz aralığı açma' basamaklarını kullanın."); }
@@ -1427,7 +1430,6 @@ const FIELDS = {
   szp: `<label class="f"><span>Sertolizumab idame</span><select id="f_szp"><option value="200">2 haftada bir 200 mg</option><option value="400">4 haftada bir 400 mg</option></select></label>`,
   infAra: `<label class="f"><span>İnfliksimab idame aralığı</span><select id="f_inf_ara"><option value="6">6 haftada bir</option><option value="8">8 haftada bir</option></select></label>`,
   bari: `<label class="f"><span>Barisitinib dozu</span><select id="f_bari"><option value="4">4 mg</option><option value="2">2 mg</option></select></label>`,
-  secAs: `<label class="f"><span>Sekukinumab dozu</span><select id="f_sec_as"><option value="150">150 mg</option><option value="300">300 mg</option></select></label>`,
   secPsa: `<label class="f"><span>Sekukinumab dozu</span><select id="f_sec_psa"><option value="300">300 mg (anti-TNF yanıtsız)</option><option value="150">150 mg</option></select></label>`,
   ust: `<label class="f"><span>Ustekinumab dozu</span><select id="f_ust"><option value="45">45 mg (≤ 100 kg)</option><option value="90">90 mg (&gt; 100 kg)</option></select></label>`,
   can: `<label class="f"><span>Kanakinumab dozu</span><select id="f_can"><option value="150">150 mg</option><option value="300">300 mg</option></select></label>`,
@@ -1437,8 +1439,11 @@ const FIELDS = {
   kol: `<label class="chk kolyd"><input type="checkbox" id="f_kol_yd"> Yurt içi preparatlara yanıt alınamaması üzerine yurt dışı kolşisin preparatı da kullanıldı</label>`,
   atak: `<fieldset class="grp"><legend>Ataklar (CRP)</legend><label class="f"><span>CRP normal üst sınırı (mg/L)</span><input id="f_uln" inputmode="decimal" placeholder="örn. 5"></label>
     <table class="atak"><thead><tr><th>Atak / ölçüm tarihi</th><th>CRP (mg/L)</th><th>Durum</th><th></th></tr></thead><tbody id="atakBody"></tbody></table>
-    <button type="button" class="btn ghost" id="atakEkle">Atak ekle</button>
-    <label class="chk yas18"><input type="checkbox" id="f_yas18"> Hasta 18 yaşından küçük (2 atak yeterli)</label></fieldset>`,
+    <button type="button" class="btn ghost" id="atakEkle">Atak ekle</button></fieldset>`,
+  baz: `<fieldset class="grp baz"><legend>Tedavi başlangıcındaki ataklar (isteğe bağlı)</legend><label class="f"><span>CRP normal üst sınırı (mg/L)</span><input id="f_uln_b" inputmode="decimal" placeholder="örn. 5"></label>
+    <table class="atak"><thead><tr><th>Atak / ölçüm tarihi</th><th>CRP (mg/L)</th><th>Durum</th><th></th></tr></thead><tbody id="bazBody"></tbody></table>
+    <button type="button" class="btn ghost" id="bazEkle">Atak ekle</button></fieldset>`,
+  yas18: `<label class="chk yas18"><input type="checkbox" id="f_yas18"> Hasta 18 yaşından küçük (2 atak yeterli)</label>`,
 
   konsult: `<fieldset class="grp"><legend>Ciddi yan etki</legend><label class="f"><span>Yan etki</span><input id="f_yanetki" placeholder="örn. anafilaksi"></label><div class="row"><label class="f"><span>Konsültasyon tarihi</span><input type="date" id="f_kons_t"></label><label class="f"><span>Branş</span><input id="f_kons_b" placeholder="örn. alerji ve immünoloji"></label></div></fieldset>`,
   canAcil: `<label class="f"><span>Doz aralığı neden açılmadı</span><select id="f_can_acil"><option value="atak">Son 6 ayda en az 1 atak görüldü</option><option value="afr">Akut faz reaktanları normal değil</option><option value="ikisi">İkisi de</option><option value="ilk6">Kanakinumab tedavisinin ilk 6 ayı (cümle eklenmez)</option></select></label>`,
@@ -1491,7 +1496,7 @@ function fieldList(dz, dr, st) {
   if (dz === "paf") { L.push("paf"); if (dr === "CAN" && st === "devam") L.push("canGecis", "pafDevam"); if (st === "ge") L.push("konsult"); if (dr === "CAN" && st === "devam") L.push("can"); }
   if (dz === "caps" && dr === "ANA") L.push("caps", "capsOnay");
   else if (dz === "caps") { L.push("caps"); if (["d3","devam"].includes(st)) L.push("canGecis"); if (st === "ge") L.push("yanEtki"); }
-  if (dz === "fmf" && dr !== "KOL") { if (dr === "ANA" && st === "bas") L.push("kol"); if (dr === "ANA" && ["devam","yeniden"].includes(st)) L.push("anaBas", "kol"); if (dr === "CAN") L.push("kolGecmis", "kol"); if (dr === "CAN" && ["devam","ac2","ac3","d300","yeniden"].includes(st)) L.push("canGecis"); if (["ac2","ac3"].includes(st)) L.push("ak"); if (["bas","int","gy","d300","yeniden","devam"].includes(st)) L.push("atak"); if (st === "ge") L.push("konsult"); if (st === "devam" && dr === "CAN") L.push("canAcil"); if (dr === "CAN" && !["gy","ge","d300"].includes(st)) L.push("can"); }
+  if (dz === "fmf" && dr !== "KOL") { if (dr === "ANA" && st === "bas") L.push("kol"); if (dr === "ANA" && ["devam","yeniden"].includes(st)) L.push("anaBas", "kol"); if (dr === "CAN") L.push("kolGecmis", "kol"); if (dr === "CAN" && ["devam","ac2","ac3","d300","yeniden"].includes(st)) L.push("canGecis"); if (["ac2","ac3"].includes(st)) L.push("ak"); if (["bas","int","gy","d300","yeniden"].includes(st)) L.push("atak"); if ((dr === "ANA" && st === "devam") || (dr === "CAN" && ["devam","ac2","ac3","d300"].includes(st))) L.push("baz"); if (dr === "CAN" && ["gy","d300","devam","ac2","ac3"].includes(st)) L.push("yas18"); if (st === "ge") L.push("konsult"); if (st === "devam" && dr === "CAN") L.push("canAcil"); if (dr === "CAN" && !["gy","ge","d300"].includes(st)) L.push("can"); }
   if (dz === "fmfa") { L.push("amil"); if (dr === "CAN" && st === "devam") L.push("canGecis"); if (st === "gy") L.push("amGerekce"); if (st === "ge") L.push("konsult"); if (st === "devam") L.push("devamSekil"); if (dr === "CAN" && st === "devam") L.push("can"); }
   if (dz === "aosd") { L.push("aosd");  }
   if (dz === "dha") L.push("dha");
@@ -1503,7 +1508,7 @@ function fieldList(dz, dr, st) {
   if (dz === "edi") L.push("edi");
   if (dz === "edo") L.push("edo");
   if (dr === "ETN") L.push("etn"); if (dr === "SZP") L.push("szp"); if (dr === "INF" && ["as","nr","per"].includes(dz)) L.push("infAra"); if (dr === "BARI") L.push("bari");
-  if (dr === "SEC" && st !== "h16" && (dz === "psa" || st !== "bas")) L.push(dz === "psa" ? "secPsa" : "secAs"); if (dr === "UST") L.push("ust");
+  if (dr === "SEC" && dz === "psa" && st !== "h16") L.push("secPsa"); if (dr === "UST") L.push("ust");
   if (DRUGS[dr]?.kilo || dr === "ANA" || dr === "CAN" || dz === "edi") L.push("kilo");
   if (dr === "ANA") L.push("anaMgkg");
 
@@ -1556,14 +1561,17 @@ function calcCompute(det) {
 }
 
 /* ---------- Atak tablosu ---------- */
-function atakSatir(t = "", c = "") {
+function atakSatir(t = "", c = "", sel = "#atakBody") {
   const tr = document.createElement("tr");
   tr.innerHTML = `<td><input type="date" value="${t}" aria-label="Atak tarihi"></td><td><input class="a-crp" inputmode="decimal" value="${c}" aria-label="CRP"></td><td class="a-dur"></td><td><button type="button" class="x" aria-label="Satırı sil">×</button></td>`;
   tr.querySelector(".x").onclick = () => { tr.remove(); copyReset(); render(); };
-  $("#atakBody").appendChild(tr);
+  $(sel).appendChild(tr);
 }
 
 /* ---------- Ana akış ---------- */
+// atak satırları hastalık–ilaç–basamak bazında; başlangıç atakları ilaç bazında saklanır (ANA: anakinra öncesi, CAN: kanakinumab öncesi)
+const atakKey = () => `__atak|${state.dz}|${state.dr}|${state.st}`;
+const bazKey = () => `__baz|${state.dr}`;
 const state = { dz: "ra", dr: "ADA", st: "bas" };
 const store = {};   // alan değerleri seçim değişince korunur
 function saveFields() { $$("#fields input, #fields select").forEach(el => { if (el.id) store[el.id] = el.type === "checkbox" ? el.checked : el.value; }); }
@@ -1589,7 +1597,9 @@ function refreshFields(temiz) {
   const L = fieldList(state.dz, state.dr, state.st);
   $("#fields").innerHTML = L.map(k => FIELDS[k]).join("");
   $$("#fields details.calc").forEach(d => { d.innerHTML = calcHTML(d.dataset.calc, d.dataset.target); });
-  if ($("#atakBody")) { const saved = (store.__atak && store.__atak.length) ? store.__atak.concat(Array(Math.max(0, 3 - store.__atak.length)).fill(["",""])) : [["",""],["",""],["",""]]; saved.forEach(r => atakSatir(r[0], r[1])); $("#atakEkle").onclick = () => { atakSatir(); }; }
+  if ($("#atakBody")) { const sa = store[atakKey()]; const saved = (sa && sa.length) ? sa.concat(Array(Math.max(0, 3 - sa.length)).fill(["",""])) : [["",""],["",""],["",""]]; saved.forEach(r => atakSatir(r[0], r[1])); $("#atakEkle").onclick = () => { atakSatir(); }; }
+  if ($("#bazBody")) { const sb = (store[bazKey()] && store[bazKey()].length) ? store[bazKey()] : (store[`__atak|fmf|${state.dr}|${state.dr === "ANA" ? "bas" : "gy"}`] || []);
+    const saved = sb.length ? sb.concat(Array(Math.max(0, 3 - sb.length)).fill(["",""])) : [["",""],["",""],["",""]]; saved.forEach(r => atakSatir(r[0], r[1], "#bazBody")); $("#bazEkle").onclick = () => { atakSatir("", "", "#bazBody"); }; }
   restoreFields();
   // varsayılanlar
   const b = build(state.dz, state.dr, state.st);
@@ -1656,9 +1666,8 @@ function toggles() {
   sh(".edo-ivig", ivig); sh(".edo-doz", !ivig); const kurN = parseInt(V("f_ivig_kur") || "1", 10); sh(".ivig-ara", kurN > 1); sh(".ivig-ara-el", kurN > 1 && V("f_ivig_ara") === "el");
   sh(".formgrp", formGerek(state.dz, state.dr));
   { const kk = num(V("f_kilo")); sh(".ana-mgkg", state.dr === "ANA" && kgOk(kk) && kk < 50 && !(state.dz === "fmfa" && state.st === "devam" && V("f_devam_sekil") === "acik")); }
-  sh(".yas18", state.dr === "CAN" && (["gy","d300"].includes(state.st) || (state.st === "devam" && fmfBazMod())));
-  { const ab = $("#atakBody"); if (ab) { const fs = ab.closest("fieldset"); const fmfDev = state.dz === "fmf" && state.st === "devam";
-      fs.hidden = fmfDev && !fmfBazMod(); fs.querySelector("legend").textContent = fmfDev ? "Tedavi başlangıcındaki ataklar (isteğe bağlı)" : "Ataklar (CRP)"; } }
+  sh(".yas18", state.dr === "CAN" && (["gy","d300"].includes(state.st) || (["devam","ac2","ac3"].includes(state.st) && fmfBazMod() && bazSatir().length > 0)));
+  sh(".baz", fmfBazMod());
   sh(".kolyd", !(state.dz === "fmf" && ((["devam","yeniden"].includes(state.st) && state.dr === "ANA" && V("f_kol_gecmis") === "intol") || (state.dr === "CAN" && V("f_kol_gecmis") === "intol"))));
   sh(".paf-ara", V("f_paf_devam") === "acik"); sh(".inf-t", !!(V("f_esh_on") || V("f_crp_on") || (V("f_mr_on") && (state.dz !== "per" || DRUGS[state.dr]?.sinif === "il17")))); sh(".caps-onay", V("f_caps_tip") === "fcu");
   { const o3 = $('#f_can option[value="300"]'); if (o3) { const az = state.dz === "paf" && V("f_paf_devam") === "azalt"; o3.disabled = o3.hidden = az; if (az && $("#f_can").value === "300") { $("#f_can").value = "150"; store.f_can = "150"; store.__can300 = 1; }
@@ -1672,7 +1681,7 @@ function toggles() {
 function girdiUyari() {
   const out = [], d = bugun(), rt = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
   const gorunur = e => { for (let x = e; x; x = x.parentElement) if (x.hidden) return false; return true; };
-  const ileri = [...new Set([...$$("#fields input[type=date]"), ...$$("#atakBody input[type=date]")])].filter(e => e.id !== "f_ivig_t" && gorunur(e) && e.value && e.value > rt);
+  const ileri = [...new Set([...$$("#fields input[type=date]"), ...$$("#atakBody input[type=date]"), ...$$("#bazBody input[type=date]")])].filter(e => e.id !== "f_ivig_t" && gorunur(e) && e.value && e.value > rt);
   if (ileri.length) out.push(`Bugünden sonraki tarih var (${ileri.map(e => fmtD(e.value)).join(", ")}): tarihleri kontrol edin`);
   const kr = $("#f_kilo") ? $("#f_kilo").value.trim() : "";
   if ($("#f_kilo") && !$("#f_kilo").closest(".f").hidden && !$("#f_kilo").closest(".edo-ivig")?.hidden && kr && !kgOk(num(kr))) out.push("Vücut ağırlığı geçersiz (sayı olarak, 2–300 kg)");
@@ -1680,22 +1689,26 @@ function girdiUyari() {
     const raw = el.value.trim(); const bad = !!raw && gorunur(el) && gecersiz(el.id, raw, el); el.classList.toggle("bad", bad);
     if (bad) { const r = ARALIK[el.id]; const ad = ARALIK_AD[el.id] || (el.closest("label")?.querySelector("span")?.textContent || "Sayısal alan");
       out.push(`${ad} geçersiz${r ? ` (geçerli aralık ${fmtE(r[0],0)}–${fmtE(r[1],0)})` : " (negatif olamaz)"}: değer metne yazılmadı`); } });
-  $$("#atakBody .a-crp").forEach(el => { const c = num(el.value); const bad = !!el.value.trim() && isFinite(c) && (c < 0 || c > 1000); el.classList.toggle("bad", bad); if (bad) out.push("Atak CRP değeri geçersiz (0–1000 mg/L): satır metne yazılmadı"); });
+  $$("#atakBody .a-crp, #bazBody .a-crp").forEach(el => { const c = num(el.value); const bad = !!el.value.trim() && isFinite(c) && (c < 0 || c > 1000) && gorunur(el); el.classList.toggle("bad", bad); if (bad) out.push(`${el.closest("#bazBody") ? "Başlangıç atakları: CRP" : "Atak CRP"} değeri geçersiz (0–1000 mg/L): satır metne yazılmadı`); });
   return out;
 }
 function render() {
   toggles();
-  if ($("#atakBody")) store.__atak = atakRows().map(r => [r.t, isFinite(r.crp) ? String(r.crp).replace(".", ",") : ""]);
+  if ($("#atakBody")) store[atakKey()] = atakRows().map(r => [r.t, isFinite(r.crp) ? String(r.crp).replace(".", ",") : ""]);
+  if ($("#bazBody")) store[bazKey()] = atakRows("#bazBody").map(r => [r.t, isFinite(r.crp) ? String(r.crp).replace(".", ",") : ""]);
   const b = build(state.dz, state.dr, state.st);
   const dz = DZ[state.dz];
   girdiUyari().forEach(msg => b.checks.push({ ok: false, warn: true, msg }));
   // FMF satır durumları
   if ($("#atakBody")) {
-    const pencere = state.st === "yeniden" ? 6 : 3; const e = atakEval(pencere, 3, state.dz === "fmf" && state.st === "devam");
+    const pencere = state.st === "yeniden" ? 6 : 3; const e = atakEval(pencere, 3);
     $$("#atakBody tr").forEach(tr => { const t = tr.querySelector("input[type=date]").value; const r = e.rows.find(x => x.t === t); const cell = tr.querySelector(".a-dur");
       if (state.st === "int") { cell.textContent = ""; cell.className = "a-dur"; return; }
       cell.textContent = !t ? "" : r ? (r.ok ? "uygun" : r.neden) : ""; cell.className = "a-dur " + (r ? (r.ok ? "ok" : "no") : ""); });
   }
+  if ($("#bazBody")) { const e = bazEval(3);
+    $$("#bazBody tr").forEach(tr => { const t = tr.querySelector("input[type=date]").value; const r = e.rows.find(x => x.t === t); const cell = tr.querySelector(".a-dur");
+      cell.textContent = !t ? "" : r ? (r.ok ? "uygun" : r.neden) : ""; cell.className = "a-dur " + (r ? (r.ok ? "ok" : "no") : ""); }); }
   // metin
   const html = s => esc(s).replace(/⟦([^⟧]*)⟧/g, (_, l) => `<mark class="ph">${l}</mark>`).replace(/⟪([^⟫]*)⟫/g, (_, l) => `<mark class="red">${l}</mark>`).replace(/&amp;(lt|gt|amp|quot);/g, "&$1;");
   const metin = b.recete || b.text;
