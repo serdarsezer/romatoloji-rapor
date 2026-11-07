@@ -957,7 +957,10 @@ function build(dz, dr, st) {
       const b1 = num(V("f_basS")), dl = Math.round((b0 - b1) * 1000) / 1000;
       const okB = isFinite(dl) && dl >= 2;
       const duz = !isFinite(dl) ? `${MISS("fark")} düzelme mevcuttur` : okB ? "en az 2 birim düzelme mevcuttur" : dl > 0 ? `${fmtE(dl,1)} birim düzelme mevcuttur` : "düzelme mevcut değildir";
-      const deg = `Güncel BASDAİ: ${TN("f_basS","güncel BASDAİ",1)}${dtP("f_basS_t")}; BASDAİ'de başlangıca göre ${duz}.` + (okB ? SON(" Tedaviye cevap alınmış olup ilaca devam edilecektir.") : "");
+      // 189: sekukinumab 16. hafta / idame: düzelme ≥ 2 ise SUT ifadesi sabit yazılır
+      const deg = c === "il17" && okB
+        ? `Güncel BASDAİ: ${TN("f_basS","güncel BASDAİ",1)}${dtP("f_basS_t")}. 16 haftalık ilaç kullanım süresi sonunda BASDAİ'de en az 2 birim düzelme mevcuttur.` + SON(" Tedaviye cevap alınmış olup ilaca devam edilecektir.")
+        : `Güncel BASDAİ: ${TN("f_basS","güncel BASDAİ",1)}${dtP("f_basS_t")}; BASDAİ'de başlangıca göre ${duz}.` + (okB ? SON(" Tedaviye cevap alınmış olup ilaca devam edilecektir.") : "");
       const giris = c === "jak" ? `${on.replace(/\.$/, "")}; ${basladi(ad)}.` : `${on} ${cap(basladi(ad))}.`;
       if (c !== "jak" && st !== "h16") { const mrOk = dz !== "per" || c === "il17"; const okI = V("f_esh_on") || V("f_crp_on") || (mrOk && V("f_mr_on"));
         ck(!!okI, okI ? "Akut faz / görüntüleme koşulu (başlangıç) işaretlendi" : `ESH > 28 mm/saat, CRP > üst sınır${mrOk ? " veya MR bulgusu" : ""} işaretlenmeli`); }
@@ -1008,7 +1011,10 @@ function build(dz, dr, st) {
     } else {
       const zaman = { "16 haftalık ilaç kullanımı":"16 haftalık ilaç kullanım süresi sonunda", "12 haftalık ilaç kullanımı":"12 haftalık ilaç kullanım süresi sonunda" }[degAy];
       const pt = psarcText(); const Pt = pt.charAt(0).toLocaleUpperCase("tr-TR") + pt.slice(1);
-      const deg = SON("Psöriatik artrit yanıt kriterlerine (PSARC) göre tedaviye cevap alınmış olup ilaca devam edilecektir.");
+      // 190/191: IL-17 (16 hafta) ve JAK (12 hafta) için SUT ifadesi sabit yazılır
+      const deg = c === "il17" || c === "jak"
+        ? SON(`${c === "il17" ? 16 : 12} haftalık ilaç kullanım süresi sonunda yapılan değerlendirmede psöriatik artrit yanıt kriterlerine (PSARC) göre yeterli cevap alınmıştır.`)
+        : SON("Psöriatik artrit yanıt kriterlerine (PSARC) göre tedaviye cevap alınmış olup ilaca devam edilecektir.");
       const giris = on + (c === "jak" && V("f_jak_neden") === "intol" ? "" : psaMuayene()) + oncekiTnf(dz, dr) + ` ${cap(basladi(ad))}.`;
       if (st === "h16") { out.recete = `${zaman} yapılan değerlendirmede ${pt}.`; out.text = ""; }
       else out.text = giris + " " + deg + " " + kullanim(dr, dz, st) + mahText() + formsText();
